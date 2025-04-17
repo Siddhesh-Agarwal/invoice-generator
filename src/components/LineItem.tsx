@@ -67,7 +67,7 @@ const LineItem = ({ item, updateItem, removeItem }: LineItemProps) => {
         <Button
           variant="ghost"
           size="icon"
-          className="h-8 w-8 text-gray-500"
+          className="h-8 w-8 text-muted-foreground"
           onClick={() => removeItem(item.id)}
         >
           <X className="h-4 w-4" />

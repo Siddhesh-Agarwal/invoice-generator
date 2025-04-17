@@ -9,7 +9,7 @@ interface InvoicePreviewProps {
 const InvoicePreview = ({ invoice }: InvoicePreviewProps) => {
   return (
     <div className="p-6 print:p-0 animate-fade-in">
-      <div className="text-sm text-gray-500 mb-8 text-right print:hidden">
+      <div className="text-sm text-muted-foreground mb-8 text-right print:hidden">
         Preview
       </div>
 
@@ -27,12 +27,12 @@ const InvoicePreview = ({ invoice }: InvoicePreviewProps) => {
           </div>
           {
             invoice.businessDetails?.address && (
-              <div className="text-gray-500 whitespace-pre-line">
+              <div className="text-muted-foreground whitespace-pre-line">
                 {invoice.businessDetails.address}
               </div>
             )
           }
-          <div className="text-gray-500">
+          <div className="text-muted-foreground">
             {invoice.businessDetails.email && (
               <div>{invoice.businessDetails.email}</div>
             )}
@@ -44,7 +44,7 @@ const InvoicePreview = ({ invoice }: InvoicePreviewProps) => {
 
         <div className="text-right">
           <h1 className="text-3xl font-bold text-invoice-primary mb-2">INVOICE</h1>
-          <div className="text-gray-500">
+          <div className="text-muted-foreground">
             <div>
               <span className="font-semibold"># </span>
               {invoice.invoiceNumber}
@@ -66,16 +66,16 @@ const InvoicePreview = ({ invoice }: InvoicePreviewProps) => {
       </div>
 
       <div className="mb-8">
-        <div className="text-sm text-gray-500 mb-1">BILL TO</div>
+        <div className="text-sm text-muted-foreground mb-1">BILL TO</div>
         <div className="font-semibold">{invoice.clientDetails.name || "Client Name"}</div>
         {
           invoice.clientDetails.address && (
-            <div className="text-gray-500 whitespace-pre-line">
+            <div className="text-muted-foreground whitespace-pre-line">
               {invoice.clientDetails.address}
             </div>
           )
         }
-        <div className="text-gray-500">
+        <div className="text-muted-foreground">
           {invoice.clientDetails.email && <div>{invoice.clientDetails.email}</div>}
           {invoice.clientDetails.phone && <div>{invoice.clientDetails.phone}</div>}
         </div>
@@ -94,7 +94,7 @@ const InvoicePreview = ({ invoice }: InvoicePreviewProps) => {
           <tbody>
             {invoice.lineItems.length === 0 ? (
               <tr>
-                <td colSpan={4} className="py-4 text-center text-gray-500">
+                <td colSpan={4} className="py-4 text-center text-muted-foreground">
                   No items added yet
                 </td>
               </tr>
@@ -136,7 +136,7 @@ const InvoicePreview = ({ invoice }: InvoicePreviewProps) => {
       {invoice.notes && (
         <div className="border-t border-border pt-4">
           <div className="text-sm text-gray-600 font-semibold mb-1">Notes</div>
-          <div className="text-sm text-gray-500 whitespace-pre-line">{invoice.notes}</div>
+          <div className="text-sm text-muted-foreground whitespace-pre-line">{invoice.notes}</div>
         </div>
       )}
     </div>

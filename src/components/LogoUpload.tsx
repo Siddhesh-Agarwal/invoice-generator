@@ -76,7 +76,7 @@ const LogoUpload = ({ logoUrl, onLogoChange }: LogoUploadProps) => {
           variant="outline"
           type="button"
           onClick={handleButtonClick}
-          className="flex items-center border-border bg-transparent"
+          className="flex items-center border-border bg-transparent cursor-pointer"
         >
           <ImageIcon className="h-4 w-4 mr-2" />
           Upload Logo

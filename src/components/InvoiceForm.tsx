@@ -204,13 +204,13 @@ const InvoiceForm = ({ invoice, setInvoice }: InvoiceFormProps) => {
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle>Line Items</CardTitle>
-          <Button onClick={addLineItem} size="sm" className="h-8">
+          <Button onClick={addLineItem} size="sm" className="h-8 cursor-pointer">
             <Plus className="h-4 w-4 mr-1" /> Add Item
           </Button>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            <div className="grid grid-cols-12 gap-2 text-sm font-medium text-gray-500 pb-2 border-b">
+            <div className="grid grid-cols-12 gap-2 text-sm font-semibold text-muted-foreground pb-2 border-b">
               <div className="col-span-5">Description</div>
               <div className="col-span-2 text-right">Qty</div>
               <div className="col-span-2 text-right">Price</div>
@@ -219,7 +219,7 @@ const InvoiceForm = ({ invoice, setInvoice }: InvoiceFormProps) => {
             </div>
 
             {invoice.lineItems.length === 0 ? (
-              <div className="text-center py-6 text-gray-500">
+              <div className="text-center py-6 text-muted-foreground">
                 No items added yet. Click the "Add Item" button to add your first item.
               </div>
             ) : (
