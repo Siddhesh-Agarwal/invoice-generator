@@ -118,13 +118,11 @@ const InvoicePreview = ({ invoice }: InvoicePreviewProps) => {
             <span className="font-medium">Subtotal:</span>
             <span>${invoice.subtotal.toFixed(2)}</span>
           </div>
-          {invoice.taxRate ? (
+          {invoice.taxRate !== 0 && (
             <div className="flex justify-between py-1">
               <span className="font-medium">Tax ({invoice.taxRate}%):</span>
               <span>${invoice.taxAmount.toFixed(2)}</span>
             </div>
-          ) : (
-            <></>
           )}
           <div className="flex justify-between py-1 text-lg font-bold border-t border-border mt-1 pt-1">
             <span>Total:</span>

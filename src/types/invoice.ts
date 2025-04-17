@@ -31,7 +31,7 @@ export interface InvoiceType {
   lineItems: LineItemType[];
   notes?: string;
   subtotal: number;
-  taxRate?: number;
-  taxAmount?: number;
+  taxRate: number;
+  taxAmount: number;
   total: number;
 }
