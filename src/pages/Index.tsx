@@ -1,8 +1,8 @@
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import InvoiceForm from '../components/InvoiceForm';
 import InvoicePreview from '../components/InvoicePreview';
-import { InvoiceType } from '../types/invoice';
+import { type InvoiceType } from '../types/invoice';
 import { Button } from '@/components/ui/button';
 import { Printer, Save } from 'lucide-react';
 import { toast } from 'sonner';

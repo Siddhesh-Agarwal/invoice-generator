@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import { Plus } from 'lucide-react';
-import { InvoiceType, LineItemType } from '@/types/invoice';
+import { type InvoiceType, type LineItemType } from '@/types/invoice';
 import LogoUpload from './LogoUpload';
 import BusinessDetails from './BusinessDetails';
 import ClientDetails from './ClientDetails';

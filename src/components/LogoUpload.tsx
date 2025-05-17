@@ -4,8 +4,8 @@ import { Button } from '@/components/ui/button';
 import { ImageIcon, X } from 'lucide-react';
 
 interface LogoUploadProps {
-  logoUrl: string | null;
-  onLogoChange: (url: string | null) => void;
+  logoUrl?: string;
+  onLogoChange: (url?: string) => void;
 }
 
 const LogoUpload = ({ logoUrl, onLogoChange }: LogoUploadProps) => {
@@ -35,7 +35,7 @@ const LogoUpload = ({ logoUrl, onLogoChange }: LogoUploadProps) => {
   };
 
   const handleRemoveLogo = () => {
-    onLogoChange(null);
+    onLogoChange();
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }

@@ -1,5 +1,5 @@
 
-import { InvoiceType } from '../types/invoice';
+import { type InvoiceType } from '../types/invoice';
 import { format } from 'date-fns';
 
 interface InvoicePreviewProps {
