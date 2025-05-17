@@ -18,13 +18,13 @@ const Index = () => {
   const [invoice, setInvoice] = useState<InvoiceType>({
     invoiceNumber: generateInvoiceNumber(),
     date: new Date(),
-    dueDate: null,
+    dueDate: undefined,
     businessDetails: {
       name: '',
       email: '',
       address: '',
       phone: '',
-      logoUrl: null,
+      logoUrl: undefined,
     },
     clientDetails: {
       name: '',
