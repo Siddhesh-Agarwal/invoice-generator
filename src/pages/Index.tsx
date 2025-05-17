@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import InvoiceForm from '../components/InvoiceForm';
 import InvoicePreview from '../components/InvoicePreview';
 import { type InvoiceType } from '../types/invoice';
@@ -41,7 +41,7 @@ const Index = () => {
   });
 
   const handleSave = () => {
-    // In a real app, this would save to a database
+    localStorage.setItem('invoice', JSON.stringify(invoice));
     toast.success('Invoice saved successfully!');
   };
 
@@ -49,6 +49,12 @@ const Index = () => {
     window.print();
   };
 
+  useEffect(() => {
+    const savedInvoice = localStorage.getItem('invoice');
+    if (savedInvoice) {
+      setInvoice(JSON.parse(savedInvoice));
+    }
+  }, []);
 
   return (
     <div className="min-h-screen bg-background">
