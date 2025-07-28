@@ -1,7 +1,14 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-import { addDoc, collection, getDocs, getFirestore } from "firebase/firestore";
-import type { InvoiceType } from "./types/invoice";
+import {
+  addDoc,
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  getFirestore,
+} from "firebase/firestore";
+import type { InvoiceType, InvoiceTypePreview } from "./types/invoice";
 
 const app = initializeApp({
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -27,6 +34,10 @@ async function continueWithGoogle() {
     });
 }
 
+// There are 2 Collections
+// users -> stores randomly generated invoiceId, date and total of invoices as an array again the user ID
+// invoices -> stores the InvoiceType object agains the invoiceId
+
 async function saveInvoice(invoice: InvoiceType) {
   const user = auth.currentUser;
   if (!user) {
@@ -35,22 +46,20 @@ async function saveInvoice(invoice: InvoiceType) {
   if (!invoice.invoiceNumber) {
     throw new Error("Invoice number is required");
   }
-  addDoc(collection(db, `users/${user.uid}/invoices`), invoice);
+  if (!invoice.date) {
+    throw new Error("Date is required");
+  }
+  if (!invoice.total) {
+    throw new Error("Amount is required");
+  }
 }
 
-async function listInvoices(): Promise<InvoiceType[]> {
+async function listInvoices(): Promise<InvoiceTypePreview[]> {
   const user = auth.currentUser;
   if (!user) {
     throw new Error("User not authenticated");
   }
-  const invoices: InvoiceType[] = [];
-  getDocs(collection(db, `users/${user.uid}/invoices`)).then(
-    (querySnapshot) => {
-      querySnapshot.forEach((doc) => {
-        invoices.push(doc.data() as InvoiceType);
-      });
-    }
-  );
+  const invoices: InvoiceTypePreview[] = [];
   return invoices;
 }
 

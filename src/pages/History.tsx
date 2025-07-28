@@ -9,7 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { auth, continueWithGoogle, listInvoices } from "@/firebase";
-import type { InvoiceType } from "@/types/invoice";
+import type { InvoiceTypePreview } from "@/types/invoice";
 import {
   Clock,
   Edit,
@@ -47,7 +47,7 @@ export default function HistoryPage() {
     );
   }
 
-  const [history, setHistory] = useState<InvoiceType[]>([]);
+  const [history, setHistory] = useState<InvoiceTypePreview[]>([]);
   const navigate = useNavigate();
   useState(() => {
     async function getHistory() {
@@ -87,7 +87,7 @@ export default function HistoryPage() {
         {history.map((invoice) => (
           <Card key={invoice.invoiceNumber}>
             <CardHeader>
-              <CardTitle>{invoice.clientDetails.name}</CardTitle>
+              <CardTitle>{invoice.clientName}</CardTitle>
               <CardDescription>{invoice.invoiceNumber}</CardDescription>
             </CardHeader>
             <CardContent>

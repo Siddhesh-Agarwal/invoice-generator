@@ -1,4 +1,3 @@
-
 export interface LineItemType {
   id: string;
   description: string;
@@ -33,5 +32,12 @@ export interface InvoiceType {
   subtotal: number;
   taxRate: number;
   taxAmount: number;
+  total: number;
+}
+
+export interface InvoiceTypePreview {
+  invoiceNumber: string;
+  date: Date;
+  clientName: string;
   total: number;
 }
