@@ -1,7 +1,11 @@
 import {Plus} from "lucide-react";
 import {v4 as uuidv4} from "uuid";
 
-import type {InvoiceType, LineItemType} from "@/types/invoice";
+import type {
+  InvoiceDetailsType,
+  InvoiceType,
+  LineItemType,
+} from "@/types/invoice";
 import BusinessDetails from "./BusinessDetails";
 import ClientDetails from "./ClientDetails";
 import InvoiceDetails from "./InvoiceDetails";
@@ -91,6 +95,13 @@ const InvoiceForm = ({invoice, setInvoice}: InvoiceFormProps) => {
     });
   };
 
+  function updateInvoice(details: InvoiceDetailsType) {
+    setInvoice((prev) => ({
+      ...prev,
+      invoiceDetails: details,
+    }));
+  }
+
   return (
     <div className="space-y-6">
       <Card className="border-none">
@@ -100,12 +111,7 @@ const InvoiceForm = ({invoice, setInvoice}: InvoiceFormProps) => {
         <CardContent className="space-y-4">
           <InvoiceDetails
             invoiceDetails={invoice.invoiceDetails}
-            setInvoiceDetails={(details) =>
-              setInvoice((prev) => ({
-                ...prev,
-                invoiceDetails: details,
-              }))
-            }
+            setInvoiceDetails={updateInvoice}
           />
         </CardContent>
       </Card>

@@ -41,6 +41,9 @@
                 "noUselessElse": "error",
                 "useConst": "error"
             },
+            "suspicious": {
+                "noArrayIndexKey": "warn"
+            },
             "recommended": true
         }
     }
