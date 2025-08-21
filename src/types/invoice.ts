@@ -1,43 +1,59 @@
-export interface LineItemType {
+import z from "zod";
+
+export const lineItemSchema = z.object({
+  description: z.string().min(1, {message: "Description is required"}),
+  quantity: z.number().min(1, {message: "Quantity must be greater than 0"}),
+  price: z.number().min(0.01, {message: "Price must be greater than 0"}),
+  total: z.number().min(0.01, {message: "Total must be greater than 0"}),
+});
+
+export type LineItemType = z.infer<typeof lineItemSchema> & {
   id: string;
-  description: string;
-  quantity: number;
-  price: number;
-  total: number;
-}
+};
 
-export interface BusinessDetailsType {
-  name: string;
-  email?: string;
-  address?: string;
-  phone?: string;
-  logoUrl?: string;
-}
+export const businessSchema = z.object({
+  name: z.string().min(1, {message: "Name is required"}),
+  email: z.email({message: "Invalid email address"}).optional(),
+  address: z.string().min(1, {message: "Address is invalid"}).optional(),
+  phone: z.string().min(1, {message: "Phone number is invalid"}).optional(),
+  logoUrl: z.base64url({message: "Invalid logo URL"}).optional(),
+});
 
-export interface ClientDetailsType {
-  name: string;
-  email?: string;
-  address?: string;
-  phone?: string;
-}
+export type BusinessDetailsType = z.infer<typeof businessSchema>;
 
-export interface InvoiceType {
-  invoiceNumber: string;
-  date: Date;
-  dueDate?: Date;
-  businessDetails: BusinessDetailsType;
-  clientDetails: ClientDetailsType;
-  lineItems: LineItemType[];
-  notes?: string;
-  subtotal: number;
-  taxRate: number;
-  taxAmount: number;
-  total: number;
-}
+export const clientSchema = z.object({
+  name: z.string().min(1, {message: "Name is required"}),
+  email: z.email({message: "Invalid email address"}).optional(),
+  address: z.string().min(1, {message: "Address is invalid"}).optional(),
+  phone: z.string().min(1, {message: "Phone number is invalid"}).optional(),
+  logoUrl: z.base64url({message: "Invalid logo URL"}).optional(),
+});
 
-export interface InvoiceTypePreview {
-  invoiceNumber: string;
-  date: Date;
-  clientName: string;
-  total: number;
-}
+export type ClientDetailsType = z.infer<typeof clientSchema>;
+
+export const invoiceDetailsSchema = z.object({
+  invoiceNumber: z.string().min(1, {message: "Invoice number is required"}),
+  date: z.date({message: "Invalid date"}),
+  dueDate: z.date({message: "Invalid due date"}).optional(),
+});
+
+export type InvoiceDetailsType = z.infer<typeof invoiceDetailsSchema>;
+
+export const invoiceSchema = z.object({
+  invoiceDetails: invoiceDetailsSchema,
+  businessDetails: businessSchema,
+  clientDetails: clientSchema,
+  lineItems: z.array(lineItemSchema),
+  notes: z.string().optional(),
+  subtotal: z.number().min(0, {message: "Subtotal must be greater than 0"}),
+  taxRate: z.number().min(0, {message: "Tax rate must be greater than 0"}),
+  taxAmount: z.number().min(0, {message: "Tax amount must be greater than 0"}),
+  total: z.number().min(0, {message: "Total must be greater than 0"}),
+});
+
+export type InvoiceType = z.infer<typeof invoiceSchema>;
+
+export type InvoiceTypePreview = Pick<
+  InvoiceType,
+  "invoiceDetails" | "clientDetails" | "total"
+>;

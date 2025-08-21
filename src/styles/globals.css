@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  --background: hsl(210.00 40.00% 98.04%);
+  --background: hsl(210.0 40.00% 98.04%);
   --foreground: hsl(217.24 32.58% 17.45%);
   --card: hsl(0 0% 100%);
   --card-foreground: hsl(217.24 32.58% 17.45%);
@@ -11,27 +11,27 @@
   --primary-foreground: hsl(0 0% 100%);
   --secondary: hsl(220 13.04% 90.98%);
   --secondary-foreground: hsl(216.92 19.12% 26.67%);
-  --muted: hsl(220.00 14.29% 95.88%);
+  --muted: hsl(220.0 14.29% 95.88%);
   --muted-foreground: hsl(220 8.94% 46.08%);
   --accent: hsl(226.45 100% 93.92%);
   --accent-foreground: hsl(216.92 19.12% 26.67%);
   --destructive: hsl(0 84.24% 60.20%);
   --destructive-foreground: hsl(0 0% 100%);
-  --border: hsl(216.00 12.20% 83.92%);
-  --input: hsl(216.00 12.20% 83.92%);
+  --border: hsl(216.0 12.20% 83.92%);
+  --input: hsl(216.0 12.20% 83.92%);
   --ring: hsl(238.73 83.53% 66.67%);
   --chart-1: hsl(238.73 83.53% 66.67%);
-  --chart-2: hsl(243.40 75.36% 58.63%);
+  --chart-2: hsl(243.4 75.36% 58.63%);
   --chart-3: hsl(244.52 57.94% 50.59%);
   --chart-4: hsl(243.65 54.50% 41.37%);
   --chart-5: hsl(242.17 47.43% 34.31%);
-  --sidebar: hsl(220.00 14.29% 95.88%);
+  --sidebar: hsl(220.0 14.29% 95.88%);
   --sidebar-foreground: hsl(217.24 32.58% 17.45%);
   --sidebar-primary: hsl(238.73 83.53% 66.67%);
   --sidebar-primary-foreground: hsl(0 0% 100%);
   --sidebar-accent: hsl(226.45 100% 93.92%);
   --sidebar-accent-foreground: hsl(216.92 19.12% 26.67%);
-  --sidebar-border: hsl(216.00 12.20% 83.92%);
+  --sidebar-border: hsl(216.0 12.20% 83.92%);
   --sidebar-ring: hsl(238.73 83.53% 66.67%);
   --font-sans: Inter, sans-serif;
   --font-serif: Merriweather, serif;
@@ -39,11 +39,16 @@
   --radius: 0.5rem;
   --shadow-2xs: 0px 4px 8px -1px hsl(0 0% 0% / 0.05);
   --shadow-xs: 0px 4px 8px -1px hsl(0 0% 0% / 0.05);
-  --shadow-sm: 0px 4px 8px -1px hsl(0 0% 0% / 0.10), 0px 1px 2px -2px hsl(0 0% 0% / 0.10);
-  --shadow: 0px 4px 8px -1px hsl(0 0% 0% / 0.10), 0px 1px 2px -2px hsl(0 0% 0% / 0.10);
-  --shadow-md: 0px 4px 8px -1px hsl(0 0% 0% / 0.10), 0px 2px 4px -2px hsl(0 0% 0% / 0.10);
-  --shadow-lg: 0px 4px 8px -1px hsl(0 0% 0% / 0.10), 0px 4px 6px -2px hsl(0 0% 0% / 0.10);
-  --shadow-xl: 0px 4px 8px -1px hsl(0 0% 0% / 0.10), 0px 8px 10px -2px hsl(0 0% 0% / 0.10);
+  --shadow-sm: 0px 4px 8px -1px hsl(0 0% 0% / 0.1), 0px 1px 2px -2px
+    hsl(0 0% 0% / 0.1);
+  --shadow: 0px 4px 8px -1px hsl(0 0% 0% / 0.1), 0px 1px 2px -2px
+    hsl(0 0% 0% / 0.1);
+  --shadow-md: 0px 4px 8px -1px hsl(0 0% 0% / 0.1), 0px 2px 4px -2px
+    hsl(0 0% 0% / 0.1);
+  --shadow-lg: 0px 4px 8px -1px hsl(0 0% 0% / 0.1), 0px 4px 6px -2px
+    hsl(0 0% 0% / 0.1);
+  --shadow-xl: 0px 4px 8px -1px hsl(0 0% 0% / 0.1), 0px 8px 10px -2px
+    hsl(0 0% 0% / 0.1);
   --shadow-2xl: 0px 4px 8px -1px hsl(0 0% 0% / 0.25);
 }
 

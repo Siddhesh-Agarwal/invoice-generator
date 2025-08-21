@@ -1,71 +1,117 @@
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import {Input} from "@/components/ui/input";
+import {Textarea} from "@/components/ui/textarea";
+import {type BusinessDetailsType, businessSchema} from "@/types/invoice";
 
-import { type BusinessDetailsType } from '../types/invoice';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
+import {zodResolver} from "@hookform/resolvers/zod";
+import {useForm} from "react-hook-form";
+import LogoUpload from "./LogoUpload";
 
 interface BusinessDetailsProps {
   businessDetails: BusinessDetailsType;
   setBusinessDetails: (details: BusinessDetailsType) => void;
 }
 
-const BusinessDetails = ({ businessDetails, setBusinessDetails }: BusinessDetailsProps) => {
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setBusinessDetails({
-      ...businessDetails,
-      [name]: value,
-    });
-  };
+const BusinessDetails = ({
+  businessDetails,
+  setBusinessDetails,
+}: BusinessDetailsProps) => {
+  const form = useForm<BusinessDetailsType>({
+    resolver: zodResolver(businessSchema),
+  });
+  form.setValue("logoUrl", businessDetails.logoUrl);
+  form.setValue("name", businessDetails.name);
+  form.setValue("email", businessDetails.email);
+  form.setValue("phone", businessDetails.phone);
+  form.setValue("address", businessDetails.address);
+
+  function handleSubmit(data: BusinessDetailsType) {
+    setBusinessDetails(data);
+  }
 
   return (
-    <div className="space-y-4">
-      <div className="space-y-2">
-        <Label htmlFor="business-name">Business Name</Label>
-        <Input
-          id="business-name"
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+        <FormField
+          control={form.control}
+          name="logoUrl"
+          render={({field}) => (
+            <FormItem>
+              <FormLabel>Upload Logo</FormLabel>
+              <LogoUpload
+                logoUrl={field.value}
+                onLogoChange={(url) =>
+                  form.setValue("logoUrl", url, {shouldValidate: true})
+                }
+              />
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
           name="name"
-          value={businessDetails.name}
-          onChange={handleChange}
-          placeholder="Your Business Name"
+          render={({field}) => (
+            <FormItem>
+              <FormLabel>Business Name</FormLabel>
+              <Input {...field} placeholder="Your Business Name" />
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="business-email">Email</Label>
-        <Input
-          id="business-email"
+        <FormField
+          control={form.control}
           name="email"
-          type="email"
-          value={businessDetails.email}
-          onChange={handleChange}
-          placeholder="your-email@example.com"
+          render={({field}) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <Input
+                {...field}
+                type="email"
+                placeholder="your-email@example.com"
+              />
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="business-phone">Phone</Label>
-        <Input
-          id="business-phone"
+        <FormField
+          control={form.control}
           name="phone"
-          value={businessDetails.phone}
-          onChange={handleChange}
-          placeholder="(123) 456-7890"
+          render={({field}) => (
+            <FormItem>
+              <FormLabel>Phone</FormLabel>
+              <Input {...field} type="tel" placeholder="(123) 456-7890" />
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="business-address">Address</Label>
-        <Textarea
-          id="business-address"
+        <FormField
+          control={form.control}
           name="address"
-          value={businessDetails.address}
-          onChange={handleChange}
-          placeholder="Street Address, City, State/Province, Postal Code, Country"
-          rows={3}
+          render={({field}) => (
+            <FormItem>
+              <FormLabel>Address</FormLabel>
+              <Textarea
+                {...field}
+                placeholder="Street Address, City, State/Province, Postal Code, Country"
+                rows={3}
+              />
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </div>
-    </div>
+      </form>
+    </Form>
   );
 };
 

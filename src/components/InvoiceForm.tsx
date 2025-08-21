@@ -1,27 +1,33 @@
-import { v4 as uuidv4 } from 'uuid';
-import { Plus } from 'lucide-react';
-import { type InvoiceType, type LineItemType } from '@/types/invoice';
-import LogoUpload from './LogoUpload';
-import BusinessDetails from './BusinessDetails';
-import ClientDetails from './ClientDetails';
-import LineItem from './LineItem';
-import DateInput from './DateInput';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
-import { Textarea } from './ui/textarea';
-import { Label } from './ui/label';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import {Plus} from "lucide-react";
+import {v4 as uuidv4} from "uuid";
+
+import type {InvoiceType, LineItemType} from "@/types/invoice";
+import BusinessDetails from "./BusinessDetails";
+import ClientDetails from "./ClientDetails";
+import InvoiceDetails from "./InvoiceDetails";
+import LineItem from "./LineItem";
+import {Button} from "./ui/button";
+import {Card, CardContent, CardHeader, CardTitle} from "./ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "./ui/table";
+import {Textarea} from "./ui/textarea";
 
 interface InvoiceFormProps {
   invoice: InvoiceType;
   setInvoice: React.Dispatch<React.SetStateAction<InvoiceType>>;
 }
 
-const InvoiceForm = ({ invoice, setInvoice }: InvoiceFormProps) => {
+const InvoiceForm = ({invoice, setInvoice}: InvoiceFormProps) => {
   const addLineItem = () => {
     const newItem: LineItemType = {
       id: uuidv4(),
-      description: '',
+      description: "",
       quantity: 1,
       price: 0,
       total: 0,
@@ -36,13 +42,13 @@ const InvoiceForm = ({ invoice, setInvoice }: InvoiceFormProps) => {
   const updateLineItem = (updatedItem: LineItemType) => {
     setInvoice((prev) => {
       const updatedLineItems = prev.lineItems.map((item) =>
-        item.id === updatedItem.id ? updatedItem : item
+        item === updatedItem ? updatedItem : item,
       );
 
       // Calculate subtotal
       const subtotal = updatedLineItems.reduce(
         (sum, item) => sum + item.total,
-        0
+        0,
       );
 
       // Calculate tax amount
@@ -61,14 +67,16 @@ const InvoiceForm = ({ invoice, setInvoice }: InvoiceFormProps) => {
     });
   };
 
-  const removeLineItem = (id: string) => {
+  const removeLineItem = (removedItem: LineItemType) => {
     setInvoice((prev) => {
-      const filteredLineItems = prev.lineItems.filter((item) => item.id !== id);
+      const filteredLineItems = prev.lineItems.filter(
+        (item) => item !== removedItem,
+      );
 
       // Recalculate totals
       const subtotal = filteredLineItems.reduce(
         (sum, item) => sum + item.total,
-        0
+        0,
       );
       const taxAmount = (subtotal * prev.taxRate) / 100;
       const total = subtotal + taxAmount;
@@ -83,95 +91,30 @@ const InvoiceForm = ({ invoice, setInvoice }: InvoiceFormProps) => {
     });
   };
 
-  const updateTaxRate = (rate: number) => {
-    setInvoice((prev) => {
-      const taxAmount = (prev.subtotal * rate) / 100;
-      const total = prev.subtotal + taxAmount;
-
-      return {
-        ...prev,
-        taxRate: rate,
-        taxAmount,
-        total,
-      };
-    });
-  };
-
   return (
     <div className="space-y-6">
-      <Card>
+      <Card className="border-none">
         <CardHeader>
           <CardTitle>Invoice Details</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="invoiceNumber">Invoice #</Label>
-              <Input
-                id="invoiceNumber"
-                value={invoice.invoiceNumber}
-                onChange={(e) =>
-                  setInvoice((prev) => ({
-                    ...prev,
-                    invoiceNumber: e.target.value,
-                  }))
-                }
-              />
-            </div>
-
-            <DateInput
-              label='Issue Date'
-              onChange={(date) =>
-                setInvoice((prev) => ({
-                  ...prev,
-                  dueDate: date || new Date(),
-                }))
-              }
-            />
-
-            <DateInput
-              label='Due Date'
-              onChange={(date) =>
-                setInvoice((prev) => ({
-                  ...prev,
-                  date: date || new Date(),
-                }))
-              }
-            />
-
-            <div className="space-y-2">
-              <Label htmlFor="taxRate">Tax Rate (%)</Label>
-              <Input
-                id="taxRate"
-                type="number"
-                value={invoice.taxRate}
-                min={0}
-                onChange={(e) => updateTaxRate(parseFloat(e.target.value) || 0)}
-              />
-            </div>
-          </div>
+          <InvoiceDetails
+            invoiceDetails={invoice.invoiceDetails}
+            setInvoiceDetails={(details) =>
+              setInvoice((prev) => ({
+                ...prev,
+                invoiceDetails: details,
+              }))
+            }
+          />
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="border-none">
         <CardHeader>
           <CardTitle>Your Business</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="mb-4">
-            <LogoUpload
-              logoUrl={invoice.businessDetails.logoUrl}
-              onLogoChange={(url) =>
-                setInvoice((prev) => ({
-                  ...prev,
-                  businessDetails: {
-                    ...prev.businessDetails,
-                    logoUrl: url,
-                  },
-                }))
-              }
-            />
-          </div>
           <BusinessDetails
             businessDetails={invoice.businessDetails}
             setBusinessDetails={(details) =>
@@ -184,7 +127,7 @@ const InvoiceForm = ({ invoice, setInvoice }: InvoiceFormProps) => {
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="border-none">
         <CardHeader>
           <CardTitle>Client Information</CardTitle>
         </CardHeader>
@@ -201,40 +144,58 @@ const InvoiceForm = ({ invoice, setInvoice }: InvoiceFormProps) => {
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="border-none">
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle>Line Items</CardTitle>
-          <Button onClick={addLineItem} size="sm" className="h-8 cursor-pointer">
-            <Plus className="h-4 w-4 mr-1" /> Add Item
+          <Button
+            onClick={addLineItem}
+            size="sm"
+            className="h-8 cursor-pointer"
+          >
+            <Plus className="mr-1 h-4 w-4" /> Add Item
           </Button>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            <div className="grid grid-cols-12 gap-2 text-sm font-semibold text-muted-foreground pb-2 border-b">
-              <div className="col-span-5">Description</div>
-              <div className="col-span-2 text-right">Qty</div>
-              <div className="col-span-2 text-right">Price</div>
-              <div className="col-span-2 text-right">Total</div>
-              <div className="col-span-1"></div>
-            </div>
-
-            {invoice.lineItems.length === 0 ? (
-              <div className="text-center py-6 text-muted-foreground">
-                No items added yet. Click the "Add Item" button to add your first item.
-              </div>
-            ) : (
-              invoice.lineItems.map((item) => (
-                <LineItem
-                  key={item.id}
-                  item={item}
-                  updateItem={updateLineItem}
-                  removeItem={removeLineItem}
-                />
-              ))
-            )}
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Description</TableHead>
+                  <TableHead>Qty</TableHead>
+                  <TableHead>Price</TableHead>
+                  <TableHead>Total</TableHead>
+                  <TableHead>Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {invoice.lineItems.length === 0 ? (
+                  <TableRow>
+                    <TableCell
+                      colSpan={5}
+                      className="h-24 text-center text-muted-foreground"
+                    >
+                      No items added yet. Click the "Add Item" button to add
+                      your first item.
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  invoice.lineItems.map((item) => {
+                    const id = uuidv4();
+                    return (
+                      <LineItem
+                        key={id}
+                        item={{...item, id}}
+                        updateItem={updateLineItem}
+                        removeItem={removeLineItem}
+                      />
+                    );
+                  })
+                )}
+              </TableBody>
+            </Table>
 
             {invoice.lineItems.length > 0 && (
-              <div className="pt-4 border-t mt-4">
+              <div className="mt-4 border-t pt-4">
                 <div className="flex justify-between py-1">
                   <span className="font-medium">Subtotal:</span>
                   <span>${invoice.subtotal.toFixed(2)}</span>
@@ -243,7 +204,7 @@ const InvoiceForm = ({ invoice, setInvoice }: InvoiceFormProps) => {
                   <span className="font-medium">Tax ({invoice.taxRate}%):</span>
                   <span>${invoice.taxAmount.toFixed(2)}</span>
                 </div>
-                <div className="flex justify-between py-1 text-lg font-bold">
+                <div className="flex justify-between py-1 font-bold text-lg">
                   <span>Total:</span>
                   <span>${invoice.total.toFixed(2)}</span>
                 </div>
@@ -253,7 +214,7 @@ const InvoiceForm = ({ invoice, setInvoice }: InvoiceFormProps) => {
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="border-none">
         <CardHeader>
           <CardTitle>Notes</CardTitle>
         </CardHeader>

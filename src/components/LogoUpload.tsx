@@ -1,14 +1,16 @@
+import {ImageIcon, X} from "lucide-react";
+import type React from "react";
+import {useRef} from "react";
 
-import React, { useRef } from 'react';
-import { Button } from '@/components/ui/button';
-import { ImageIcon, X } from 'lucide-react';
+import {Button} from "@/components/ui/button";
+import {Input} from "./ui/input";
 
 interface LogoUploadProps {
   logoUrl?: string;
   onLogoChange: (url?: string) => void;
 }
 
-const LogoUpload = ({ logoUrl, onLogoChange }: LogoUploadProps) => {
+const LogoUpload = ({logoUrl, onLogoChange}: LogoUploadProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -16,14 +18,14 @@ const LogoUpload = ({ logoUrl, onLogoChange }: LogoUploadProps) => {
     if (!file) return;
 
     // Make sure it's an image
-    if (!file.type.match('image.*')) {
-      alert('Please select an image file');
+    if (!file.type.match("image.*")) {
+      alert("Please select an image file");
       return;
     }
 
     const reader = new FileReader();
     reader.onload = (e) => {
-      if (typeof e.target?.result === 'string') {
+      if (typeof e.target?.result === "string") {
         onLogoChange(e.target.result);
       }
     };
@@ -37,13 +39,13 @@ const LogoUpload = ({ logoUrl, onLogoChange }: LogoUploadProps) => {
   const handleRemoveLogo = () => {
     onLogoChange();
     if (fileInputRef.current) {
-      fileInputRef.current.value = '';
+      fileInputRef.current.value = "";
     }
   };
 
   return (
     <div className="mb-4">
-      <input
+      <Input
         type="file"
         accept="image/*"
         className="hidden"
@@ -53,14 +55,20 @@ const LogoUpload = ({ logoUrl, onLogoChange }: LogoUploadProps) => {
 
       {logoUrl ? (
         <div className="flex items-center space-x-2">
-          <div className="relative inline-block border border-border rounded p-2">
-            <img src={logoUrl} alt="Business Logo" className="h-16 max-w-[200px]" />
-            <button
+          <div className="relative inline-block rounded border border-border p-2">
+            <img
+              src={logoUrl}
+              alt="Business Logo"
+              className="h-16 max-w-[200px]"
+            />
+            <Button
+              variant="outline"
+              size="icon"
               onClick={handleRemoveLogo}
-              className="absolute -top-2 -right-2 bg-transparent rounded-full border border-border p-1 shadow-sm"
+              className="-top-2 -right-2 absolute rounded-full shadow-sm"
             >
               <X className="h-3 w-3" />
-            </button>
+            </Button>
           </div>
           <Button
             variant="outline"
@@ -76,9 +84,9 @@ const LogoUpload = ({ logoUrl, onLogoChange }: LogoUploadProps) => {
           variant="outline"
           type="button"
           onClick={handleButtonClick}
-          className="flex items-center border-border bg-transparent cursor-pointer"
+          className="flex cursor-pointer items-center border-border bg-transparent"
         >
-          <ImageIcon className="h-4 w-4 mr-2" />
+          <ImageIcon className="mr-2 h-4 w-4" />
           Upload Logo
         </Button>
       )}

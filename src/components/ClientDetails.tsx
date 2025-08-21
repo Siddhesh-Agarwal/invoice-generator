@@ -1,70 +1,92 @@
-import { type ClientDetailsType } from '../types/invoice';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
+import {Input} from "@/components/ui/input";
+import {Textarea} from "@/components/ui/textarea";
+import {type ClientDetailsType, clientSchema} from "@/types/invoice";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {useForm} from "react-hook-form";
+import {Form, FormField, FormItem, FormLabel, FormMessage} from "./ui/form";
 
 interface ClientDetailsProps {
   clientDetails: ClientDetailsType;
   setClientDetails: (details: ClientDetailsType) => void;
 }
 
-const ClientDetails = ({ clientDetails, setClientDetails }: ClientDetailsProps) => {
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setClientDetails({
-      ...clientDetails,
-      [name]: value,
-    });
-  };
+const ClientDetails = ({
+  clientDetails,
+  setClientDetails,
+}: ClientDetailsProps) => {
+  const form = useForm<ClientDetailsType>({
+    resolver: zodResolver(clientSchema),
+  });
+  form.setValue("name", clientDetails.name);
+  form.setValue("email", clientDetails.email);
+  form.setValue("phone", clientDetails.phone);
+  form.setValue("address", clientDetails.address);
+  form.setValue("logoUrl", clientDetails.logoUrl);
+
+  function handleChange(data: ClientDetailsType) {
+    setClientDetails(data);
+  }
 
   return (
-    <div className="space-y-4">
-      <div className="space-y-2">
-        <Label htmlFor="client-name">Client Name</Label>
-        <Input
-          id="client-name"
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(handleChange)} className="space-y-4">
+        <FormField
+          control={form.control}
           name="name"
-          value={clientDetails.name}
-          onChange={handleChange}
-          placeholder="Client or Company Name"
+          render={({field}) => (
+            <FormItem>
+              <FormLabel>Client Name</FormLabel>
+              <Input {...field} placeholder="Client or Company Name" />
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="client-email">Email</Label>
-        <Input
-          id="client-email"
+        <FormField
+          control={form.control}
           name="email"
-          type="email"
-          value={clientDetails.email}
-          onChange={handleChange}
-          placeholder="client-email@example.com"
+          render={({field}) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <Input
+                {...field}
+                type="email"
+                placeholder="client-email@example.com"
+              />
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="client-phone">Phone</Label>
-        <Input
-          id="client-phone"
+        <FormField
+          control={form.control}
           name="phone"
-          value={clientDetails.phone}
-          onChange={handleChange}
-          placeholder="(123) 456-7890"
+          render={({field}) => (
+            <FormItem>
+              <FormLabel>Phone</FormLabel>
+              <Input {...field} type="tel" placeholder="(123) 456-7890" />
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="client-address">Address</Label>
-        <Textarea
-          id="client-address"
+        <FormField
+          control={form.control}
           name="address"
-          value={clientDetails.address}
-          onChange={handleChange}
-          placeholder="Street Address, City, State/Province, Postal Code, Country"
-          rows={3}
+          render={({field}) => (
+            <FormItem>
+              <FormLabel>Address</FormLabel>
+              <Textarea
+                {...field}
+                placeholder="Street Address, City, State/Province, Postal Code, Country"
+                rows={3}
+              />
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </div>
-    </div>
+      </form>
+    </Form>
   );
 };
 

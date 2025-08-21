@@ -1,50 +1,30 @@
-import { LogIn, LogOut } from "lucide-react";
-import { Button } from "./ui/button";
-import { auth, continueWithGoogle } from "@/firebase";
-import { Link, useNavigate } from "react-router";
+import Image from "next/image";
+import Link from "next/link";
+import {AuthButton} from "./AuthButton";
+import {Button} from "./ui/button";
 
 export default function Header() {
-  const navigate = useNavigate();
-  const path = window.location.pathname;
-
   return (
-    <nav className="bg-accent px-2 md:px-8 py-1 flex justify-between items-center print:hidden">
-      <Link to="#">
+    <nav className="flex items-center justify-between bg-accent px-2 py-1 md:px-8 print:hidden">
+      <Link href={"/"} prefetch passHref>
         <div className="flex">
-          <img alt="logo" src="/1F4D2.svg" height={30} width={30} />
+          <Image alt="logo" src="/favicon-32x32.png" height={30} width={30} />
           <span className="font-semibold text-lg">
             Simple Invoice Generator
           </span>
         </div>
       </Link>
       <div className="flex">
-        {path === "/" ? (
+        <Link href="/history" passHref>
           <Button
             variant={"link"}
-            className="text-accent-foreground font-semibold"
-            onClick={() => navigate("/history")}
+            className="font-semibold text-accent-foreground"
           >
             History
           </Button>
-        ) : (
-          <Button
-            variant={"link"}
-            className="text-accent-foreground font-semibold"
-            onClick={() => navigate("/")}
-          >
-            Home
-          </Button>
-        )}
+        </Link>
 
-        {auth.currentUser === null ? (
-          <Button size={"icon"} onClick={() => continueWithGoogle()}>
-            <LogIn />
-          </Button>
-        ) : (
-          <Button size={"icon"} onClick={() => auth.signOut()}>
-            <LogOut />
-          </Button>
-        )}
+        <AuthButton />
       </div>
     </nav>
   );
