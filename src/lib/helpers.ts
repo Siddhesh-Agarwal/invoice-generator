@@ -22,11 +22,11 @@ export async function getTRPCCaller() {
   return trpc;
 }
 
-export async function getInvoice(invoiceNumber: number) {
+export async function getInvoice(invoiceNumber: string) {
   "use server";
 
   const trpc = await getTRPCCaller();
-  const invoice = await trpc.invoice.get({id: invoiceNumber});
+  const invoice = await trpc.invoice.get({invoiceId: invoiceNumber});
   return invoice;
 }
 
@@ -38,10 +38,10 @@ export async function getInvoices() {
   return invoices;
 }
 
-export async function deleteInvoice(invoiceNumber: number) {
+export async function deleteInvoice(invoiceNumber: string) {
   "use server";
 
   const trpc = await getTRPCCaller();
-  const invoice = await trpc.invoice.delete({id: invoiceNumber});
+  const invoice = await trpc.invoice.delete({invoiceId: invoiceNumber});
   return invoice;
 }

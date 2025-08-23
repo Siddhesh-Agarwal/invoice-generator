@@ -4,12 +4,9 @@ export const lineItemSchema = z.object({
   description: z.string().min(1, {message: "Description is required"}),
   quantity: z.number().min(1, {message: "Quantity must be greater than 0"}),
   price: z.number().min(0.01, {message: "Price must be greater than 0"}),
-  total: z.number().min(0.01, {message: "Total must be greater than 0"}),
 });
 
-export type LineItemType = z.infer<typeof lineItemSchema> & {
-  id: string;
-};
+export type LineItemType = z.infer<typeof lineItemSchema>;
 
 export const businessSchema = z.object({
   name: z.string().min(1, {message: "Name is required"}),

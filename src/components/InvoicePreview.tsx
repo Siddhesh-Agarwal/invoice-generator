@@ -6,7 +6,7 @@ interface InvoicePreviewProps {
   invoice: InvoiceType;
 }
 
-const InvoicePreview = ({invoice}: InvoicePreviewProps) => {
+function InvoicePreview({invoice}: InvoicePreviewProps) {
   return (
     <div className="animate-fade-in p-6 print:p-0">
       <div className="mb-8 grid grid-cols-2 gap-8">
@@ -107,7 +107,9 @@ const InvoicePreview = ({invoice}: InvoicePreviewProps) => {
                   </td>
                   <td className="py-3 text-right">{item.quantity}</td>
                   <td className="py-3 text-right">${item.price.toFixed(2)}</td>
-                  <td className="py-3 text-right">${item.total.toFixed(2)}</td>
+                  <td className="py-3 text-right">
+                    ${(item.quantity * item.price).toFixed(2)}
+                  </td>
                 </tr>
               ))
             )}
@@ -144,6 +146,6 @@ const InvoicePreview = ({invoice}: InvoicePreviewProps) => {
       )}
     </div>
   );
-};
+}
 
 export default InvoicePreview;

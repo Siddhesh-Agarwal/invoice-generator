@@ -3,7 +3,11 @@
 import InvoiceForm from "@/components/InvoiceForm";
 import InvoicePreview from "@/components/InvoicePreview";
 import {Button} from "@/components/ui/button";
-import type {InvoiceType} from "@/types/invoice";
+import {
+  type InvoiceType,
+  type LineItemType,
+  invoiceSchema,
+} from "@/types/invoice";
 import {Printer, Save} from "lucide-react";
 import {useSearchParams} from "next/navigation";
 import {useEffect, useState} from "react";
@@ -48,7 +52,28 @@ export default function Page() {
   }
 
   function handlePrint() {
-    window.print();
+    if (invoiceSchema.safeParse(invoice).success) {
+      window.print();
+    } else if (
+      confirm(
+        "The invoice has incorrect/missing fields. Are you sure you want to print it?",
+      )
+    ) {
+      window.print();
+    }
+  }
+
+  function addLineItem() {
+    const newItem: LineItemType = {
+      description: "",
+      quantity: 1,
+      price: 0,
+    };
+
+    setInvoice((prev) => ({
+      ...prev,
+      lineItems: [...prev.lineItems, newItem],
+    }));
   }
 
   useEffect(() => {
@@ -107,7 +132,11 @@ export default function Page() {
 
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
           <div className="lg:col-span-1 print:hidden">
-            <InvoiceForm invoice={invoice} setInvoice={setInvoice} />
+            <InvoiceForm
+              invoice={invoice}
+              setInvoice={setInvoice}
+              addLineItem={addLineItem}
+            />
           </div>
           <div className="rounded-lg bg-card p-6 shadow lg:col-span-1 print:shadow-none">
             <InvoicePreview invoice={invoice} />

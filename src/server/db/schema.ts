@@ -14,7 +14,10 @@ import {
 import type {AdapterAccount} from "next-auth/adapters";
 
 export const Invoice = pgTable("invoice", {
-  id: integer().notNull().primaryKey().generatedByDefaultAsIdentity(),
+  id: varchar()
+    .notNull()
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
   userId: varchar("user_id")
     .notNull()
     .references(() => Users.id),
@@ -34,7 +37,7 @@ export const Users = pgTable("user", {
   emailVerified: timestamp().defaultNow(),
   image: varchar({length: 255}),
   userType: UserType().notNull().default("free"),
-  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+  createdAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
 export const Accounts = pgTable(

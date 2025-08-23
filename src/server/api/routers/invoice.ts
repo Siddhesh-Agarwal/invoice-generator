@@ -15,19 +15,25 @@ export const invoiceRouter = createTRPCRouter({
       if (!ctx.session || !ctx.session.user || !ctx.session.user.id) {
         throw new Error("Unauthorized");
       }
-      await ctx.db.insert(Invoice).values({
-        userId: ctx.session.user.id,
-        data: input,
-      });
+      const res = await ctx.db
+        .insert(Invoice)
+        .values({
+          userId: ctx.session.user.id,
+          data: input,
+        })
+        .returning({
+          id: Invoice.id,
+        });
+      return res;
     }),
 
   get: protectedProcedure
-    .input(z.object({id: z.int()}))
+    .input(z.object({invoiceId: z.string()}))
     .query(async ({ctx, input}) => {
       const invoice = await ctx.db
         .select()
         .from(Invoice)
-        .where(eq(Invoice.id, input.id));
+        .where(eq(Invoice.id, input.invoiceId));
       if (invoice.length !== 1 || !invoice[0]) {
         throw new Error("Post not found");
       }
@@ -49,11 +55,11 @@ export const invoiceRouter = createTRPCRouter({
   }),
 
   delete: protectedProcedure
-    .input(z.object({id: z.int()}))
+    .input(z.object({invoiceId: z.string()}))
     .mutation(async ({ctx, input}) => {
       const res = await ctx.db
         .delete(Invoice)
-        .where(eq(Invoice.id, input.id))
+        .where(eq(Invoice.id, input.invoiceId))
         .returning();
       if (res.length === 0) {
         throw new Error("Post not found");
@@ -61,7 +67,7 @@ export const invoiceRouter = createTRPCRouter({
     }),
 
   update: protectedProcedure
-    .input(z.object({invoiceId: z.int(), data: invoiceSchema}))
+    .input(z.object({invoiceId: z.string(), data: invoiceSchema}))
     .mutation(async ({ctx, input}) => {
       await ctx.db
         .update(Invoice)

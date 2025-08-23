@@ -1,11 +1,9 @@
-import {Plus} from "lucide-react";
-import {v4 as uuidv4} from "uuid";
-
 import type {
   InvoiceDetailsType,
   InvoiceType,
   LineItemType,
 } from "@/types/invoice";
+import {Plus} from "lucide-react";
 import BusinessDetails from "./BusinessDetails";
 import ClientDetails from "./ClientDetails";
 import InvoiceDetails from "./InvoiceDetails";
@@ -25,24 +23,10 @@ import {Textarea} from "./ui/textarea";
 interface InvoiceFormProps {
   invoice: InvoiceType;
   setInvoice: React.Dispatch<React.SetStateAction<InvoiceType>>;
+  addLineItem: () => void;
 }
 
-const InvoiceForm = ({invoice, setInvoice}: InvoiceFormProps) => {
-  const addLineItem = () => {
-    const newItem: LineItemType = {
-      id: uuidv4(),
-      description: "",
-      quantity: 1,
-      price: 0,
-      total: 0,
-    };
-
-    setInvoice((prev) => ({
-      ...prev,
-      lineItems: [...prev.lineItems, newItem],
-    }));
-  };
-
+function InvoiceForm({invoice, setInvoice, addLineItem}: InvoiceFormProps) {
   const updateLineItem = (updatedItem: LineItemType) => {
     setInvoice((prev) => {
       const updatedLineItems = prev.lineItems.map((item) =>
@@ -51,7 +35,7 @@ const InvoiceForm = ({invoice, setInvoice}: InvoiceFormProps) => {
 
       // Calculate subtotal
       const subtotal = updatedLineItems.reduce(
-        (sum, item) => sum + item.total,
+        (sum, item) => sum + item.quantity * item.price,
         0,
       );
 
@@ -79,7 +63,7 @@ const InvoiceForm = ({invoice, setInvoice}: InvoiceFormProps) => {
 
       // Recalculate totals
       const subtotal = filteredLineItems.reduce(
-        (sum, item) => sum + item.total,
+        (sum, item) => sum + item.quantity * item.price,
         0,
       );
       const taxAmount = (subtotal * prev.taxRate) / 100;
@@ -185,17 +169,14 @@ const InvoiceForm = ({invoice, setInvoice}: InvoiceFormProps) => {
                     </TableCell>
                   </TableRow>
                 ) : (
-                  invoice.lineItems.map((item) => {
-                    const id = uuidv4();
-                    return (
-                      <LineItem
-                        key={id}
-                        item={{...item, id}}
-                        updateItem={updateLineItem}
-                        removeItem={removeLineItem}
-                      />
-                    );
-                  })
+                  invoice.lineItems.map((item, index) => (
+                    <LineItem
+                      key={index}
+                      item={item}
+                      updateItem={updateLineItem}
+                      removeItem={removeLineItem}
+                    />
+                  ))
                 )}
               </TableBody>
             </Table>
@@ -240,6 +221,6 @@ const InvoiceForm = ({invoice, setInvoice}: InvoiceFormProps) => {
       </Card>
     </div>
   );
-};
+}
 
 export default InvoiceForm;

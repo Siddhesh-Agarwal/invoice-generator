@@ -1,3 +1,5 @@
+"use client";
+
 import {ImageIcon, X} from "lucide-react";
 import type React from "react";
 import {useRef} from "react";
@@ -10,7 +12,7 @@ interface LogoUploadProps {
   onLogoChange: (url?: string) => void;
 }
 
-const LogoUpload = ({logoUrl, onLogoChange}: LogoUploadProps) => {
+function LogoUpload({logoUrl, onLogoChange}: LogoUploadProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -92,6 +94,6 @@ const LogoUpload = ({logoUrl, onLogoChange}: LogoUploadProps) => {
       )}
     </div>
   );
-};
+}
 
 export default LogoUpload;

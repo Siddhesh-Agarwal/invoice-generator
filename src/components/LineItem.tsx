@@ -1,9 +1,8 @@
-import {X} from "lucide-react";
-import {useEffect, useState} from "react";
-
 import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
 import type {LineItemType} from "@/types/invoice";
+import {X} from "lucide-react";
+import {useEffect, useState} from "react";
 import {TableCell, TableRow} from "./ui/table";
 
 interface LineItemProps {
@@ -12,20 +11,18 @@ interface LineItemProps {
   removeItem: (item: LineItemType) => void;
 }
 
-const LineItem = ({item, updateItem, removeItem}: LineItemProps) => {
+export default function LineItem({item, updateItem, removeItem}: LineItemProps) {
   const [description, setDescription] = useState(item.description);
   const [quantity, setQuantity] = useState(item.quantity);
   const [price, setPrice] = useState(item.price);
 
   useEffect(() => {
     // Update the item total when quantity or price changes
-    const total = quantity * price;
     updateItem({
       ...item,
       description,
       quantity,
       price,
-      total,
     });
   }, [description, quantity, price, updateItem, item]);
 
@@ -74,6 +71,5 @@ const LineItem = ({item, updateItem, removeItem}: LineItemProps) => {
       </TableCell>
     </TableRow>
   );
-};
+}
 
-export default LineItem;
