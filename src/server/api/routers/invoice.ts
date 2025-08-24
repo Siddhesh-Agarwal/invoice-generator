@@ -1,16 +1,12 @@
-import {
-  createTRPCRouter,
-  protectedProcedure,
-  publicProcedure,
-} from "@/server/api/trpc";
+import {createTRPCRouter, protectedProcedure} from "@/server/api/trpc";
 import {Invoice} from "@/server/db/schema";
 import {invoiceSchema} from "@/types/invoice";
 import {eq} from "drizzle-orm";
 import {z} from "zod";
 
 export const invoiceRouter = createTRPCRouter({
-  create: publicProcedure
-    .input(invoiceSchema)
+  create: protectedProcedure
+    .input(z.object({data: invoiceSchema}))
     .mutation(async ({ctx, input}) => {
       if (!ctx.session || !ctx.session.user || !ctx.session.user.id) {
         throw new Error("Unauthorized");
@@ -19,12 +15,12 @@ export const invoiceRouter = createTRPCRouter({
         .insert(Invoice)
         .values({
           userId: ctx.session.user.id,
-          data: input,
+          data: input.data,
         })
         .returning({
           id: Invoice.id,
         });
-      return res;
+      return res[0];
     }),
 
   get: protectedProcedure

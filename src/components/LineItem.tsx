@@ -11,7 +11,11 @@ interface LineItemProps {
   removeItem: (item: LineItemType) => void;
 }
 
-export default function LineItem({item, updateItem, removeItem}: LineItemProps) {
+export default function LineItem({
+  item,
+  updateItem,
+  removeItem,
+}: LineItemProps) {
   const [description, setDescription] = useState(item.description);
   const [quantity, setQuantity] = useState(item.quantity);
   const [price, setPrice] = useState(item.price);
@@ -72,4 +76,3 @@ export default function LineItem({item, updateItem, removeItem}: LineItemProps) 
     </TableRow>
   );
 }
-

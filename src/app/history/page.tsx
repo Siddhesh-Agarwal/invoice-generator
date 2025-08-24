@@ -1,15 +1,3 @@
-import {
-  Clock,
-  DollarSign,
-  Edit,
-  Hash,
-  History,
-  Trash2,
-  UserPlus,
-} from "lucide-react";
-import Link from "next/link";
-// import { useEffect, useState } from "react";
-
 import {Button} from "@/components/ui/button";
 import {
   Card,
@@ -20,8 +8,21 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {deleteInvoice, getInvoices, serverSignIn} from "@/lib/helpers";
+import {Skeleton} from "@/components/ui/skeleton";
+import {deleteInvoice, serverSignIn} from "@/lib/helpers";
 import {auth} from "@/server/auth";
+import {api} from "@/trpc/react";
+import {
+  Ban,
+  Clock,
+  DollarSign,
+  Edit,
+  Hash,
+  History,
+  Trash2,
+  UserPlus,
+} from "lucide-react";
+import Link from "next/link";
 
 export default async function Page() {
   const user = await auth().then((user) => user?.user);
@@ -46,9 +47,38 @@ export default async function Page() {
     );
   }
 
-  const history = await getInvoices();
+  const {data: history, isLoading, error} = api.invoice.getByUser.useQuery();
 
-  if (history.length === 0) {
+  if (isLoading || !history) {
+    return (
+      <section className="flex h-screen w-full items-center justify-center">
+        <Skeleton className="h-6 w-full max-w-xl" />
+        <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <Skeleton className="h-48 w-full" />
+          <Skeleton className="h-48 w-full" />
+          <Skeleton className="h-48 w-full" />
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="flex h-screen w-full items-center justify-center">
+        <div className="flex flex-col items-center">
+          <Ban
+            className="text-center font-semibold text-destructive-foreground text-xl"
+            size={96}
+          />
+          <h1 className="text-center font-semibold text-destructive-foreground text-xl">
+            Something went wrong. Please try again later.
+          </h1>
+        </div>
+      </section>
+    );
+  }
+
+  if (!history.length) {
     return (
       <section className="flex h-screen w-full items-center justify-center">
         <div className="flex flex-col items-center">
@@ -59,7 +89,7 @@ export default async function Page() {
           <h1 className="text-center font-semibold text-muted-foreground text-xl">
             No invoices found.
             <br />
-            <Link href="/" prefetch>
+            <Link href="/" passHref prefetch>
               <Button variant={"link"} className="text-xl">
                 Create an invoice
               </Button>

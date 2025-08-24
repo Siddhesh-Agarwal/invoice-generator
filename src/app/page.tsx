@@ -3,18 +3,20 @@
 import InvoiceForm from "@/components/InvoiceForm";
 import InvoicePreview from "@/components/InvoicePreview";
 import {Button} from "@/components/ui/button";
+import {api} from "@/trpc/react";
 import {
   type InvoiceType,
   type LineItemType,
   invoiceSchema,
 } from "@/types/invoice";
 import {Printer, Save} from "lucide-react";
-import {useSearchParams} from "next/navigation";
+import {useRouter, useSearchParams} from "next/navigation";
 import {useEffect, useState} from "react";
 import {toast} from "sonner";
 
 export default function Page() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const [invoice, setInvoice] = useState<InvoiceType>({
     invoiceDetails: {
       invoiceNumber: "",
@@ -45,6 +47,24 @@ export default function Page() {
   function handleSave() {
     try {
       // saveInvoice(invoice);
+      const invoiceID = searchParams.get("invoice");
+      if (invoiceID) {
+        // update invoice
+        // api.invoice.update({ invoiceId: invoiceID, data: invoice })
+        const {mutate} = api.invoice.update.useMutation();
+        mutate({invoiceId: invoiceID, data: invoice});
+      } else {
+        // create invoice
+        const {mutate, data} = api.invoice.create.useMutation();
+        mutate({data: invoice});
+
+        if (data === undefined) {
+          throw new Error("Failed to create invoice");
+        }
+        const params = new URLSearchParams();
+        params.set("invoice", data.id);
+        router.push(`?${params.toString()}`);
+      }
       toast.success("Invoice saved successfully!");
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Unknown error");
@@ -78,26 +98,15 @@ export default function Page() {
 
   useEffect(() => {
     async function handleInvoiceNumberInSearchParam() {
-      const invoiceNumberString = searchParams.get("invoice");
-      if (invoiceNumberString) {
-        const invoiceNumber = Number.parseInt(invoiceNumberString);
-        if (Number.isNaN(invoiceNumber)) {
-          return;
-        }
-        // const user = await auth();
-        // if (!user || !user.user || !user.user.id) {
-        //   forbidden();
-        // }
-        // await getInvoice(invoiceNumber)
-        //   .then((res) => {
-        //     if (res) {
-        //       setInvoice(res.data as InvoiceType);
-        //     }
-        //   }).catch((err) => {
-        //     console.error(err instanceof Error ? err.message : "Unknown error");
-        //     forbidden();
-        //   })
+      const invoiceID = searchParams.get("invoice");
+      if (!invoiceID) {
+        return;
       }
+      const {data} = api.invoice.get.useQuery({invoiceId: invoiceID});
+      if (!data) {
+        throw new Error("Failed to fetch invoice");
+      }
+      setInvoice(data.data);
     }
 
     try {
