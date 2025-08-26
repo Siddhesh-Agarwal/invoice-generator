@@ -11,7 +11,7 @@ import {
 } from "@/types/invoice";
 import {Printer, Save} from "lucide-react";
 import {useRouter, useSearchParams} from "next/navigation";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import {toast} from "sonner";
 
 export default function Page() {
@@ -43,6 +43,14 @@ export default function Page() {
     taxAmount: 0,
     total: 0,
   });
+  const invoiceID = searchParams.get("invoice");
+  if (invoiceID !== null) {
+    const {data} = api.invoice.get.useQuery({invoiceId: invoiceID});
+    if (data === undefined) {
+      throw new Error("Failed to fetch invoice");
+    }
+    setInvoice(data.data);
+  }
 
   function handleSave() {
     try {
@@ -95,26 +103,6 @@ export default function Page() {
       lineItems: [...prev.lineItems, newItem],
     }));
   }
-
-  useEffect(() => {
-    async function handleInvoiceNumberInSearchParam() {
-      const invoiceID = searchParams.get("invoice");
-      if (!invoiceID) {
-        return;
-      }
-      const {data} = api.invoice.get.useQuery({invoiceId: invoiceID});
-      if (!data) {
-        throw new Error("Failed to fetch invoice");
-      }
-      setInvoice(data.data);
-    }
-
-    try {
-      handleInvoiceNumberInSearchParam();
-    } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Unknown error");
-    }
-  }, [searchParams.get]);
 
   return (
     <div className="min-h-screen bg-background">

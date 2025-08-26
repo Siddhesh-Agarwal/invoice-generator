@@ -9,7 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {Skeleton} from "@/components/ui/skeleton";
-import {deleteInvoice, serverSignIn} from "@/lib/helpers";
+import {serverSignIn} from "@/lib/helpers";
 import {auth} from "@/server/auth";
 import {api} from "@/trpc/react";
 import {
@@ -26,6 +26,13 @@ import Link from "next/link";
 
 export default async function Page() {
   const user = await auth().then((user) => user?.user);
+  const {data: history, isLoading, error} = api.invoice.getByUser.useQuery();
+
+  async function deleteInvoice(id: string) {
+    api.invoice.delete.useMutation().mutate({invoiceId: id});
+    history?.filter((invoice) => invoice.id !== id);
+  }
+
   if (!user || !user.id) {
     return (
       <section className="flex h-screen w-full items-center justify-center">
@@ -46,8 +53,6 @@ export default async function Page() {
       </section>
     );
   }
-
-  const {data: history, isLoading, error} = api.invoice.getByUser.useQuery();
 
   if (isLoading || !history) {
     return (
@@ -139,12 +144,13 @@ export default async function Page() {
                     Edit
                   </Button>
                 </Link>
-                <form onSubmit={() => deleteInvoice(invoice.id)}>
-                  <Button variant={"destructive"} type="submit">
-                    <Trash2 className="mr-2" size={16} />
-                    Delete
-                  </Button>
-                </form>
+                <Button
+                  variant={"destructive"}
+                  onClick={() => deleteInvoice(invoice.id)}
+                >
+                  <Trash2 className="mr-2" size={16} />
+                  Delete
+                </Button>
               </CardAction>
             </CardFooter>
           </Card>

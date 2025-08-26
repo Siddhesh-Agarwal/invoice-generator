@@ -8,7 +8,12 @@ export async function AuthButton() {
 
   return (
     <form onSubmit={session ? serverSignOut : serverSignIn}>
-      <Button type="submit" size={"icon"} variant={"ghost"}>
+      <Button
+        type="submit"
+        size={"icon"}
+        variant={"ghost"}
+        title={session ? "Sign out" : "Sign in"}
+      >
         {session ? <LogOut /> : <LogIn />}
         <span className="sr-only">{session ? "Sign out" : "Sign in"}</span>
       </Button>
