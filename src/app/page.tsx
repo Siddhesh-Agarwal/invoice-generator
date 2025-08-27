@@ -43,12 +43,9 @@ export default function Page() {
     taxAmount: 0,
     total: 0,
   });
-  const invoiceID = searchParams.get("invoice");
-  if (invoiceID !== null) {
-    const {data} = api.invoice.get.useQuery({invoiceId: invoiceID});
-    if (data === undefined) {
-      throw new Error("Failed to fetch invoice");
-    }
+  const invoiceID = searchParams.get("invoice") || "";
+  const {data, error} = api.invoice.get.useQuery({invoiceId: invoiceID});
+  if (error === null && data) {
     setInvoice(data.data);
   }
 
