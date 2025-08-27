@@ -2,6 +2,7 @@ import {Input} from "@/components/ui/input";
 import {Textarea} from "@/components/ui/textarea";
 import {type ClientDetailsType, clientSchema} from "@/types/invoice";
 import {zodResolver} from "@hookform/resolvers/zod";
+import {useEffect} from "react";
 import {useForm} from "react-hook-form";
 import {Form, FormField, FormItem, FormLabel, FormMessage} from "./ui/form";
 
@@ -16,18 +17,14 @@ const ClientDetails = ({
 }: ClientDetailsProps) => {
   const form = useForm<ClientDetailsType>({
     resolver: zodResolver(clientSchema),
+    defaultValues: clientDetails,
+    mode: "onChange",
   });
-  form.setValue("name", clientDetails.name);
-  form.setValue("email", clientDetails.email);
-  form.setValue("phone", clientDetails.phone);
-  form.setValue("address", clientDetails.address);
-  form.setValue("logoUrl", clientDetails.logoUrl);
+  const watchedValues = form.watch();
 
-  form.subscribe({
-    callback(data) {
-      setClientDetails(data.values);
-    },
-  });
+  useEffect(() => {
+    setClientDetails(watchedValues);
+  }, [watchedValues, setClientDetails]);
 
   return (
     <Form {...form}>

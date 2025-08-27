@@ -10,6 +10,7 @@ import {Textarea} from "@/components/ui/textarea";
 import {type BusinessDetailsType, businessSchema} from "@/types/invoice";
 
 import {zodResolver} from "@hookform/resolvers/zod";
+import {useEffect} from "react";
 import {useForm} from "react-hook-form";
 import LogoUpload from "./LogoUpload";
 
@@ -24,18 +25,14 @@ const BusinessDetails = ({
 }: BusinessDetailsProps) => {
   const form = useForm<BusinessDetailsType>({
     resolver: zodResolver(businessSchema),
+    defaultValues: businessDetails,
+    mode: "onChange",
   });
-  form.setValue("logoUrl", businessDetails.logoUrl);
-  form.setValue("name", businessDetails.name);
-  form.setValue("email", businessDetails.email);
-  form.setValue("phone", businessDetails.phone);
-  form.setValue("address", businessDetails.address);
+  const watchedValues = form.watch();
 
-  form.subscribe({
-    callback(data) {
-      setBusinessDetails(data.values);
-    },
-  });
+  useEffect(() => {
+    setBusinessDetails(watchedValues);
+  }, [watchedValues, setBusinessDetails]);
 
   return (
     <Form {...form}>

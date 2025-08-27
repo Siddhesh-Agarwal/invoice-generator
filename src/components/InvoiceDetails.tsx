@@ -1,5 +1,6 @@
 import {type InvoiceDetailsType, invoiceDetailsSchema} from "@/types/invoice";
 import {zodResolver} from "@hookform/resolvers/zod";
+import {useEffect} from "react";
 import {useForm} from "react-hook-form";
 import {DateInput} from "./ui/date-input";
 import {Form, FormField, FormItem, FormLabel, FormMessage} from "./ui/form";
@@ -14,16 +15,14 @@ export default function InvoiceDetails({
 }) {
   const form = useForm<InvoiceDetailsType>({
     resolver: zodResolver(invoiceDetailsSchema),
+    defaultValues: invoiceDetails,
+    mode: "onChange",
   });
-  form.setValue("invoiceNumber", invoiceDetails.invoiceNumber);
-  form.setValue("dueDate", invoiceDetails.dueDate);
-  form.setValue("date", invoiceDetails.date);
+  const watchedValues = form.watch();
 
-  form.subscribe({
-    callback(data) {
-      setInvoiceDetails(data.values);
-    },
-  });
+  useEffect(() => {
+    setInvoiceDetails(watchedValues);
+  }, [watchedValues, setInvoiceDetails]);
 
   return (
     <Form {...form}>
