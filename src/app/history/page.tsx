@@ -1,20 +1,20 @@
 "use client";
 
-import {Button} from "@/components/ui/button";
-import {
-  Card,
-  CardAction,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import {Button, buttonVariants} from "@/components/ui/button";
 import {Skeleton} from "@/components/ui/skeleton";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import {api} from "@/trpc/react";
 import {
   Ban,
-  Clock,
+  CalendarCheck,
+  CalendarClock,
   DollarSign,
   Edit,
   Hash,
@@ -33,7 +33,7 @@ export default function Page() {
     history?.filter((invoice) => invoice.id !== id);
   }
 
-  if (isLoading || !history) {
+  if (isLoading) {
     return (
       <section className="flex h-screen w-full items-center justify-center">
         <Skeleton className="h-6 w-full max-w-xl" />
@@ -80,7 +80,7 @@ export default function Page() {
     );
   }
 
-  if (!history.length) {
+  if (!history || !history.length) {
     return (
       <section className="flex h-screen w-full items-center justify-center">
         <div className="flex flex-col items-center">
@@ -91,10 +91,12 @@ export default function Page() {
           <h1 className="text-center font-semibold text-muted-foreground text-xl">
             No invoices found.
             <br />
-            <Link href="/" passHref prefetch>
-              <Button variant={"link"} className="text-xl">
-                Create an invoice
-              </Button>
+            <Link
+              href="/"
+              className={buttonVariants({variant: "link"})}
+              prefetch
+            >
+              Create an invoice
             </Link>
           </h1>
         </div>
@@ -105,54 +107,90 @@ export default function Page() {
   return (
     <section className="flex h-screen w-full flex-col p-4 md:p-8">
       <h1 className="font-semibold text-2xl">Invoice History</h1>
-      <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {history.map((invoice) => (
-          <Card
-            key={invoice.data.invoiceDetails.invoiceNumber}
-            className="w-full hover:shadow-xl"
-          >
-            <CardHeader>
-              <CardTitle className="uppercase">
-                {invoice.data.clientDetails.name}
-              </CardTitle>
-              <CardDescription className="flex items-center gap-2">
-                <Hash size={16} />
-                {invoice.data.invoiceDetails.invoiceNumber}
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center">
-                <Clock className="mr-2" size={16} />
-                <h4>{invoice.createdAt.toLocaleDateString()}</h4>
-              </div>
-              <div className="flex items-center">
-                <DollarSign className="mr-2" size={16} />
-                <h4>{invoice.data.total}</h4>
-              </div>
-            </CardContent>
-            <CardFooter>
-              <CardAction className="flex items-center gap-2">
+      <Table className="mt-4">
+        <TableHeader>
+          <TableRow>
+            <TableHead>Client Name</TableHead>
+            <TableHead>Invoice Number</TableHead>
+            <TableHead>Date</TableHead>
+            <TableHead>Due Date</TableHead>
+            <TableHead>Total</TableHead>
+            <TableHead className="text-right">Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {history.length === 0 ? (
+            <TableRow className="h-24 text-muted-foreground">
+              <TableCell className="font-medium uppercase" colSpan={6}>
+                No invoices found.
+                <br />
                 <Link
-                  href={`/invoice?invoice=${invoice.data.invoiceDetails.invoiceNumber}`}
-                  passHref
+                  href="/"
+                  prefetch
+                  className={buttonVariants({variant: "link"})}
                 >
-                  <Button variant={"secondary"}>
-                    <Edit className="mr-2" size={16} />
-                    Edit
-                  </Button>
+                  Create an invoice
                 </Link>
-                <Button
-                  variant={"destructive"}
-                  onClick={() => deleteInvoice(invoice.id)}
-                >
-                  <Trash2 className="mr-2" size={16} />
-                  Delete
-                </Button>
-              </CardAction>
-            </CardFooter>
-          </Card>
-        ))}
-      </div>
+              </TableCell>
+            </TableRow>
+          ) : (
+            history.map((invoice) => (
+              <TableRow key={invoice.id}>
+                <TableCell className="font-medium uppercase">
+                  {invoice.data.clientDetails.name}
+                </TableCell>
+                <TableCell>
+                  <div className="flex items-center gap-2">
+                    <Hash size={16} />
+                    {invoice.data.invoiceDetails.invoiceNumber}
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <div className="flex items-center">
+                    <CalendarCheck className="mr-2" size={16} />
+                    {invoice.data.invoiceDetails.date.toLocaleDateString()}
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <div className="flex items-center">
+                    <CalendarClock className="mr-2" size={16} />
+                    {invoice.data.invoiceDetails.dueDate?.toLocaleDateString() ||
+                      "N/A"}
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <div className="flex items-center">
+                    <DollarSign className="mr-2" size={16} />
+                    {invoice.data.total}
+                  </div>
+                </TableCell>
+                <TableCell className="text-right">
+                  <div className="flex items-center justify-end gap-2">
+                    <Link
+                      href={`/invoice?invoice=${invoice.data.invoiceDetails.invoiceNumber}`}
+                      className={buttonVariants({
+                        variant: "secondary",
+                        size: "sm",
+                      })}
+                    >
+                      <Edit className="mr-2" size={16} />
+                      Edit
+                    </Link>
+                    <Button
+                      variant={"destructive"}
+                      size={"sm"}
+                      onClick={() => deleteInvoice(invoice.id)}
+                    >
+                      <Trash2 className="mr-2" size={16} />
+                      Delete
+                    </Button>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))
+          )}
+        </TableBody>
+      </Table>
     </section>
   );
 }

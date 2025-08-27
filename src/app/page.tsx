@@ -2,17 +2,17 @@
 
 import InvoiceForm from "@/components/InvoiceForm";
 import InvoicePreview from "@/components/InvoicePreview";
-import { Button } from "@/components/ui/button";
-import { api } from "@/trpc/react";
+import {Button} from "@/components/ui/button";
+import {api} from "@/trpc/react";
 import {
   type InvoiceType,
   type LineItemType,
   invoiceSchema,
 } from "@/types/invoice";
-import { Printer, Save } from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
-import { toast } from "sonner";
+import {Printer, Save} from "lucide-react";
+import {useRouter, useSearchParams} from "next/navigation";
+import {useState} from "react";
+import {toast} from "sonner";
 
 export default function Page() {
   const searchParams = useSearchParams();
@@ -44,22 +44,26 @@ export default function Page() {
     total: 0,
   });
   const invoiceID = searchParams.get("invoice") || "";
-  const { data, error } = api.invoice.get.useQuery({ invoiceId: invoiceID });
+  const {data, error} = api.invoice.get.useQuery({invoiceId: invoiceID});
   if (error === null && data) {
     setInvoice(data.data);
   }
-  const { mutateAsync: updateInvoice } = api.invoice.update.useMutation();
-  const { mutateAsync: createInvoice, data: createInvoiceData } = api.invoice.create.useMutation();
+  const {mutateAsync: updateInvoice} = api.invoice.update.useMutation();
+  const {mutateAsync: createInvoice, data: createInvoiceData} =
+    api.invoice.create.useMutation();
 
   async function handleSave() {
     try {
+      if (error?.data?.code === "UNAUTHORIZED") {
+        throw new Error("Login/register to save invoice");
+      }
       const invoiceID = searchParams.get("invoice");
       if (invoiceID) {
         // update invoice
-        await updateInvoice({ invoiceId: invoiceID, data: invoice });
+        await updateInvoice({invoiceId: invoiceID, data: invoice});
       } else {
         // create invoice
-        await createInvoice({ data: invoice });
+        await createInvoice({data: invoice});
 
         if (createInvoiceData === undefined) {
           throw new Error("Failed to create invoice");
@@ -130,7 +134,7 @@ export default function Page() {
               addLineItem={addLineItem}
             />
           </div>
-          <div className="rounded-lg bg-card p-6 shadow lg:col-span-1 print:shadow-none">
+          <div className="rounded-lg border border-border bg-card p-6 shadow lg:col-span-1 print:shadow-none">
             <InvoicePreview invoice={invoice} />
           </div>
         </div>

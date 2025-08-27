@@ -26,8 +26,12 @@ interface InvoiceFormProps {
   addLineItem: () => void;
 }
 
-function InvoiceForm({invoice, setInvoice, addLineItem}: InvoiceFormProps) {
-  const updateLineItem = (updatedItem: LineItemType) => {
+export default function InvoiceForm({
+  invoice,
+  setInvoice,
+  addLineItem,
+}: InvoiceFormProps) {
+  function updateLineItem(updatedItem: LineItemType) {
     setInvoice((prev) => {
       const updatedLineItems = prev.lineItems.map((item) =>
         item === updatedItem ? updatedItem : item,
@@ -53,9 +57,9 @@ function InvoiceForm({invoice, setInvoice, addLineItem}: InvoiceFormProps) {
         total,
       };
     });
-  };
+  }
 
-  const removeLineItem = (removedItem: LineItemType) => {
+  function removeLineItem(removedItem: LineItemType) {
     setInvoice((prev) => {
       const filteredLineItems = prev.lineItems.filter(
         (item) => item !== removedItem,
@@ -77,7 +81,7 @@ function InvoiceForm({invoice, setInvoice, addLineItem}: InvoiceFormProps) {
         total,
       };
     });
-  };
+  }
 
   function updateInvoice(details: InvoiceDetailsType) {
     setInvoice((prev) => ({
@@ -88,7 +92,7 @@ function InvoiceForm({invoice, setInvoice, addLineItem}: InvoiceFormProps) {
 
   return (
     <div className="space-y-6">
-      <Card className="border-none">
+      <Card className="border-border">
         <CardHeader>
           <CardTitle>Invoice Details</CardTitle>
         </CardHeader>
@@ -100,7 +104,7 @@ function InvoiceForm({invoice, setInvoice, addLineItem}: InvoiceFormProps) {
         </CardContent>
       </Card>
 
-      <Card className="border-none">
+      <Card className="border-border">
         <CardHeader>
           <CardTitle>Your Business</CardTitle>
         </CardHeader>
@@ -117,7 +121,7 @@ function InvoiceForm({invoice, setInvoice, addLineItem}: InvoiceFormProps) {
         </CardContent>
       </Card>
 
-      <Card className="border-none">
+      <Card className="border-border">
         <CardHeader>
           <CardTitle>Client Information</CardTitle>
         </CardHeader>
@@ -134,7 +138,7 @@ function InvoiceForm({invoice, setInvoice, addLineItem}: InvoiceFormProps) {
         </CardContent>
       </Card>
 
-      <Card className="border-none">
+      <Card className="border-border">
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle>Line Items</CardTitle>
           <Button
@@ -201,7 +205,7 @@ function InvoiceForm({invoice, setInvoice, addLineItem}: InvoiceFormProps) {
         </CardContent>
       </Card>
 
-      <Card className="border-none">
+      <Card className="border-border">
         <CardHeader>
           <CardTitle>Notes</CardTitle>
         </CardHeader>
@@ -222,5 +226,3 @@ function InvoiceForm({invoice, setInvoice, addLineItem}: InvoiceFormProps) {
     </div>
   );
 }
-
-export default InvoiceForm;
