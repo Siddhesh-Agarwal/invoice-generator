@@ -1,4 +1,6 @@
 import type {
+  BusinessDetailsType,
+  ClientDetailsType,
   InvoiceDetailsType,
   InvoiceType,
   LineItemType,
@@ -64,7 +66,6 @@ export default function InvoiceForm({
       const filteredLineItems = prev.lineItems.filter(
         (item) => item !== removedItem,
       );
-
       // Recalculate totals
       const subtotal = filteredLineItems.reduce(
         (sum, item) => sum + item.quantity * item.price,
@@ -90,6 +91,27 @@ export default function InvoiceForm({
     }));
   }
 
+  function updateBusiness(data: BusinessDetailsType) {
+    setInvoice((prev) => ({
+      ...prev,
+      businessDetails: data,
+    }));
+  }
+
+  function updateClient(data: ClientDetailsType) {
+    setInvoice((prev) => ({
+      ...prev,
+      clientDetails: data,
+    }));
+  }
+
+  function updateNotes(notes: string) {
+    setInvoice((prev) => ({
+      ...prev,
+      notes,
+    }));
+  }
+
   return (
     <div className="space-y-6">
       <Card className="border-border">
@@ -111,12 +133,7 @@ export default function InvoiceForm({
         <CardContent>
           <BusinessDetails
             businessDetails={invoice.businessDetails}
-            setBusinessDetails={(details) =>
-              setInvoice((prev) => ({
-                ...prev,
-                businessDetails: details,
-              }))
-            }
+            setBusinessDetails={updateBusiness}
           />
         </CardContent>
       </Card>
@@ -128,12 +145,7 @@ export default function InvoiceForm({
         <CardContent>
           <ClientDetails
             clientDetails={invoice.clientDetails}
-            setClientDetails={(details) =>
-              setInvoice((prev) => ({
-                ...prev,
-                clientDetails: details,
-              }))
-            }
+            setClientDetails={updateClient}
           />
         </CardContent>
       </Card>
@@ -175,7 +187,7 @@ export default function InvoiceForm({
                 ) : (
                   invoice.lineItems.map((item, index) => (
                     <LineItem
-                      key={index}
+                      key={`line-item-${index}-${item.description}`}
                       item={item}
                       updateItem={updateLineItem}
                       removeItem={removeLineItem}
@@ -213,13 +225,8 @@ export default function InvoiceForm({
           <Textarea
             placeholder="Payment terms, thank you notes, or any additional information..."
             value={invoice.notes}
-            className="min-h-[100px]"
-            onChange={(e) =>
-              setInvoice((prev) => ({
-                ...prev,
-                notes: e.target.value,
-              }))
-            }
+            className="min-h-[120px]"
+            onChange={(e) => updateNotes(e.target.value)}
           />
         </CardContent>
       </Card>
