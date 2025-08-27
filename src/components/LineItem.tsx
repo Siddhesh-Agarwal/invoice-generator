@@ -23,12 +23,11 @@ export default function LineItem({
   useEffect(() => {
     // Update the item total when quantity or price changes
     updateItem({
-      ...item,
       description,
       quantity,
       price,
     });
-  }, [description, quantity, price, updateItem, item]);
+  }, [description, quantity, price, updateItem]);
 
   return (
     <TableRow>
