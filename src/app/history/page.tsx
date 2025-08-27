@@ -1,3 +1,5 @@
+"use client";
+
 import {Button} from "@/components/ui/button";
 import {
   Card,
@@ -9,8 +11,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {Skeleton} from "@/components/ui/skeleton";
-import {serverSignIn} from "@/lib/helpers";
-import {auth} from "@/server/auth";
 import {api} from "@/trpc/react";
 import {
   Ban,
@@ -24,34 +24,13 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
-export default async function Page() {
-  const user = await auth().then((user) => user?.user);
+export default function Page() {
   const {data: history, isLoading, error} = api.invoice.getByUser.useQuery();
 
   async function deleteInvoice(id: string) {
-    api.invoice.delete.useMutation().mutate({invoiceId: id});
+    const {mutateAsync} = api.invoice.delete.useMutation();
+    await mutateAsync({invoiceId: id});
     history?.filter((invoice) => invoice.id !== id);
-  }
-
-  if (!user || !user.id) {
-    return (
-      <section className="flex h-screen w-full items-center justify-center">
-        <div className="flex flex-col items-center">
-          <UserPlus
-            className="rounded-full border border-border p-2 text-muted-foreground"
-            size={96}
-          />
-          <h1 className="flex flex-col items-center text-center text-muted-foreground text-xl">
-            <form onSubmit={serverSignIn}>
-              <Button variant={"link"} className="text-xl" type="submit">
-                Create an account
-              </Button>
-            </form>
-            <span>to view invoice history.</span>
-          </h1>
-        </div>
-      </section>
-    );
   }
 
   if (isLoading || !history) {
@@ -68,6 +47,24 @@ export default async function Page() {
   }
 
   if (error) {
+    if (error.data?.code === "UNAUTHORIZED") {
+      return (
+        <section className="flex h-screen w-full items-center justify-center">
+          <div className="flex flex-col items-center">
+            <UserPlus
+              className="rounded-full border border-border p-2 text-muted-foreground"
+              size={96}
+            />
+            <h1 className="flex flex-col items-center text-center text-muted-foreground text-xl">
+              <Button variant={"link"} className="text-xl" type="submit">
+                Create an account
+              </Button>
+              <span>to view invoice history.</span>
+            </h1>
+          </div>
+        </section>
+      );
+    }
     return (
       <section className="flex h-screen w-full items-center justify-center">
         <div className="flex flex-col items-center">
