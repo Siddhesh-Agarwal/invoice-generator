@@ -23,13 +23,15 @@ const ClientDetails = ({
   form.setValue("address", clientDetails.address);
   form.setValue("logoUrl", clientDetails.logoUrl);
 
-  function handleChange(data: ClientDetailsType) {
-    setClientDetails(data);
-  }
+  form.subscribe({
+    callback(data) {
+      setClientDetails(data.values);
+    },
+  });
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleChange)} className="space-y-4">
+      <form className="space-y-4">
         <FormField
           control={form.control}
           name="name"

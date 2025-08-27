@@ -31,13 +31,15 @@ const BusinessDetails = ({
   form.setValue("phone", businessDetails.phone);
   form.setValue("address", businessDetails.address);
 
-  function handleSubmit(data: BusinessDetailsType) {
-    setBusinessDetails(data);
-  }
+  form.subscribe({
+    callback(data) {
+      setBusinessDetails(data.values);
+    },
+  });
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+      <form className="space-y-4">
         <FormField
           control={form.control}
           name="logoUrl"

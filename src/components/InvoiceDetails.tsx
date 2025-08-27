@@ -19,16 +19,15 @@ export default function InvoiceDetails({
   form.setValue("dueDate", invoiceDetails.dueDate);
   form.setValue("date", invoiceDetails.date);
 
-  function handleChange(data: InvoiceDetailsType) {
-    setInvoiceDetails(data);
-  }
+  form.subscribe({
+    callback(data) {
+      setInvoiceDetails(data.values);
+    },
+  });
 
   return (
     <Form {...form}>
-      <form
-        onChange={form.handleSubmit(handleChange)}
-        className="grid grid-cols-2 gap-4"
-      >
+      <form className="grid grid-cols-2 gap-4">
         <FormField
           control={form.control}
           name="invoiceNumber"
