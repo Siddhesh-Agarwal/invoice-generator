@@ -2,17 +2,17 @@
 
 import InvoiceForm from "@/components/InvoiceForm";
 import InvoicePreview from "@/components/InvoicePreview";
-import {Button} from "@/components/ui/button";
-import {api} from "@/trpc/react";
+import { Button } from "@/components/ui/button";
+import { api } from "@/trpc/react";
 import {
   type InvoiceType,
   type LineItemType,
   invoiceSchema,
 } from "@/types/invoice";
-import {Printer, Save} from "lucide-react";
-import {useRouter, useSearchParams} from "next/navigation";
-import {useState} from "react";
-import {toast} from "sonner";
+import { Printer, Save } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
+import { toast } from "sonner";
 
 export default function Page() {
   const searchParams = useSearchParams();
@@ -44,28 +44,28 @@ export default function Page() {
     total: 0,
   });
   const invoiceID = searchParams.get("invoice") || "";
-  const {data, error} = api.invoice.get.useQuery({invoiceId: invoiceID});
+  const { data, error } = api.invoice.get.useQuery({ invoiceId: invoiceID });
   if (error === null && data) {
     setInvoice(data.data);
   }
+  const { mutateAsync: updateInvoice } = api.invoice.update.useMutation();
+  const { mutateAsync: createInvoice, data: createInvoiceData } = api.invoice.create.useMutation();
 
   async function handleSave() {
     try {
       const invoiceID = searchParams.get("invoice");
       if (invoiceID) {
         // update invoice
-        const {mutateAsync} = api.invoice.update.useMutation();
-        await mutateAsync({invoiceId: invoiceID, data: invoice});
+        await updateInvoice({ invoiceId: invoiceID, data: invoice });
       } else {
         // create invoice
-        const {mutateAsync, data} = api.invoice.create.useMutation();
-        await mutateAsync({data: invoice});
+        await createInvoice({ data: invoice });
 
-        if (data === undefined) {
+        if (createInvoiceData === undefined) {
           throw new Error("Failed to create invoice");
         }
         const params = new URLSearchParams();
-        params.set("invoice", data.id);
+        params.set("invoice", createInvoiceData.id);
         router.push(`?${params.toString()}`);
       }
       toast.success("Invoice saved successfully!");
