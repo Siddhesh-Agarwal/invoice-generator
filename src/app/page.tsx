@@ -28,7 +28,7 @@ export default function Page() {
       email: "",
       address: "",
       phone: "",
-      logoUrl: undefined,
+      logoUrl: "",
     },
     clientDetails: {
       name: "",
@@ -52,19 +52,17 @@ export default function Page() {
     setInvoice(data.data);
   }
 
-  function handleSave() {
+  async function handleSave() {
     try {
-      // saveInvoice(invoice);
       const invoiceID = searchParams.get("invoice");
       if (invoiceID) {
         // update invoice
-        // api.invoice.update({ invoiceId: invoiceID, data: invoice })
-        const {mutate} = api.invoice.update.useMutation();
-        mutate({invoiceId: invoiceID, data: invoice});
+        const {mutateAsync} = api.invoice.update.useMutation();
+        await mutateAsync({invoiceId: invoiceID, data: invoice});
       } else {
         // create invoice
-        const {mutate, data} = api.invoice.create.useMutation();
-        mutate({data: invoice});
+        const {mutateAsync, data} = api.invoice.create.useMutation();
+        await mutateAsync({data: invoice});
 
         if (data === undefined) {
           throw new Error("Failed to create invoice");
