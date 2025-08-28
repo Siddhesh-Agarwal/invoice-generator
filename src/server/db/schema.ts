@@ -13,6 +13,13 @@ import {
 } from "drizzle-orm/pg-core";
 import type {AdapterAccount} from "next-auth/adapters";
 
+export const PaymentStatus = pgEnum("payment_status", [
+  "draft",
+  "pending",
+  "paid",
+  "failed",
+]);
+
 export const Invoice = pgTable("invoice", {
   id: varchar()
     .notNull()
@@ -21,6 +28,7 @@ export const Invoice = pgTable("invoice", {
   userId: varchar("user_id")
     .notNull()
     .references(() => Users.id),
+  paymentStatus: PaymentStatus().notNull().default("pending"),
   data: json("data").$type<InvoiceType>().notNull(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });

@@ -1,6 +1,13 @@
 "use client";
 
 import {Button, buttonVariants} from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {Skeleton} from "@/components/ui/skeleton";
 import {
   Table,
@@ -31,6 +38,14 @@ export default function Page() {
     const {mutateAsync} = api.invoice.delete.useMutation();
     await mutateAsync({invoiceId: id});
     history?.filter((invoice) => invoice.id !== id);
+  }
+
+  async function updateInvoiceStatus(
+    id: string,
+    status: "draft" | "pending" | "paid" | "failed",
+  ) {
+    const {mutateAsync} = api.invoice.updateStatus.useMutation();
+    await mutateAsync({invoiceId: id, status});
   }
 
   if (isLoading) {
@@ -115,13 +130,14 @@ export default function Page() {
             <TableHead>Date</TableHead>
             <TableHead>Due Date</TableHead>
             <TableHead>Total</TableHead>
+            <TableHead>Payment Status</TableHead>
             <TableHead className="text-right">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {history.length === 0 ? (
             <TableRow className="h-24 text-muted-foreground">
-              <TableCell className="font-medium uppercase" colSpan={6}>
+              <TableCell className="font-medium uppercase" colSpan={7}>
                 No invoices found.
                 <br />
                 <Link
@@ -164,27 +180,46 @@ export default function Page() {
                     {invoice.data.total}
                   </div>
                 </TableCell>
-                <TableCell className="text-right">
-                  <div className="flex items-center justify-end gap-2">
-                    <Link
-                      href={`/invoice?invoice=${invoice.data.invoiceDetails.invoiceNumber}`}
-                      className={buttonVariants({
-                        variant: "secondary",
-                        size: "sm",
-                      })}
-                    >
-                      <Edit className="mr-2" size={16} />
-                      Edit
-                    </Link>
-                    <Button
-                      variant={"destructive"}
-                      size={"sm"}
-                      onClick={() => deleteInvoice(invoice.id)}
-                    >
-                      <Trash2 className="mr-2" size={16} />
-                      Delete
-                    </Button>
-                  </div>
+                <TableCell>
+                  <Select
+                    value={invoice.paymentStatus}
+                    onValueChange={(value) =>
+                      updateInvoiceStatus(
+                        invoice.id,
+                        value as "draft" | "pending" | "paid" | "failed",
+                      )
+                    }
+                  >
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue placeholder="Status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="draft">Draft</SelectItem>
+                      <SelectItem value="pending">Pending</SelectItem>
+                      <SelectItem value="paid">Paid</SelectItem>
+                      <SelectItem value="failed">Failed</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </TableCell>
+                <TableCell className="flex items-center justify-end gap-2">
+                  <Link
+                    href={`/invoice?invoice=${invoice.data.invoiceDetails.invoiceNumber}`}
+                    className={buttonVariants({
+                      variant: "secondary",
+                      size: "sm",
+                    })}
+                  >
+                    <Edit className="mr-2" size={16} />
+                    Edit
+                  </Link>
+                  <Button
+                    variant={"destructive"}
+                    size={"sm"}
+                    onClick={() => deleteInvoice(invoice.id)}
+                  >
+                    <Trash2 className="mr-2" size={16} />
+                    Delete
+                  </Button>
                 </TableCell>
               </TableRow>
             ))

@@ -72,4 +72,20 @@ export const invoiceRouter = createTRPCRouter({
         })
         .where(eq(Invoice.id, input.invoiceId));
     }),
+
+  updateStatus: protectedProcedure
+    .input(
+      z.object({
+        invoiceId: z.string(),
+        status: z.enum(["draft", "pending", "paid", "failed"]),
+      }),
+    )
+    .mutation(async ({ctx, input}) => {
+      await ctx.db
+        .update(Invoice)
+        .set({
+          paymentStatus: input.status,
+        })
+        .where(eq(Invoice.id, input.invoiceId));
+    }),
 });
