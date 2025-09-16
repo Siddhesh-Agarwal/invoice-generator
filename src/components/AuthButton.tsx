@@ -7,16 +7,15 @@ export async function AuthButton() {
   const session = await auth();
 
   return (
-    <form onSubmit={session ? serverSignOut : serverSignIn}>
-      <Button
-        type="submit"
-        size={"icon"}
-        variant={"ghost"}
-        title={session ? "Sign out" : "Sign in"}
-      >
-        {session ? <LogOut /> : <LogIn />}
-        <span className="sr-only">{session ? "Sign out" : "Sign in"}</span>
-      </Button>
-    </form>
+    <Button
+      type="submit"
+      size={"icon"}
+      variant={"ghost"}
+      title={session ? "Sign out" : "Sign in"}
+      onClick={session ? serverSignOut : serverSignIn}
+    >
+      {session ? <LogOut /> : <LogIn />}
+      <span className="sr-only">{session ? "Sign out" : "Sign in"}</span>
+    </Button>
   );
 }

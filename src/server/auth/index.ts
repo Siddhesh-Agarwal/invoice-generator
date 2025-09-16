@@ -16,11 +16,15 @@ export const {auth, handlers, signIn, signOut} = NextAuth({
     sessionsTable: Sessions,
     verificationTokensTable: VerificationTokens,
   }),
-  providers: [Google],
-  callbacks: {
-    redirect: ({url, baseUrl}) => {
-      if (url.startsWith("/")) return `${baseUrl}${url}`;
-      return baseUrl;
-    },
-  },
+  providers: [
+    Google({
+      authorization: {
+        params: {
+          prompt: "consent",
+          access_type: "offline",
+          response_type: "code",
+        },
+      },
+    }),
+  ],
 });

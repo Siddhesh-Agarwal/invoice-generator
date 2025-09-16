@@ -44,8 +44,11 @@ export default function Page() {
     total: 0,
   });
   const invoiceID = searchParams.get("invoice") || "";
-  const {data, error} = api.invoice.get.useQuery({invoiceId: invoiceID});
-  if (error === null && data) {
+  const {data, error} = api.invoice.get.useQuery(
+    {invoiceId: invoiceID},
+    {retry: false},
+  );
+  if (error === null && data !== undefined) {
     setInvoice(data.data);
   }
   const {mutateAsync: updateInvoice} = api.invoice.update.useMutation();

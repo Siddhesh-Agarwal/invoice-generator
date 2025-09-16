@@ -1,6 +1,7 @@
 "use client";
 
 import {Button, buttonVariants} from "@/components/ui/button";
+import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import {
   Select,
   SelectContent,
@@ -8,7 +9,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {Skeleton} from "@/components/ui/skeleton";
 import {
   Table,
   TableBody,
@@ -32,7 +32,7 @@ import {
 import Link from "next/link";
 
 export default function Page() {
-  const {data: history, isLoading, error} = api.invoice.getByUser.useQuery();
+  const {data: history, error} = api.invoice.getByUser.useQuery();
 
   async function deleteInvoice(id: string) {
     const {mutateAsync} = api.invoice.delete.useMutation();
@@ -46,19 +46,6 @@ export default function Page() {
   ) {
     const {mutateAsync} = api.invoice.updateStatus.useMutation();
     await mutateAsync({invoiceId: id, status});
-  }
-
-  if (isLoading) {
-    return (
-      <section className="flex h-screen w-full items-center justify-center">
-        <Skeleton className="h-6 w-full max-w-xl" />
-        <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-          <Skeleton className="h-48 w-full" />
-          <Skeleton className="h-48 w-full" />
-          <Skeleton className="h-48 w-full" />
-        </div>
-      </section>
-    );
   }
 
   if (error) {
@@ -121,6 +108,38 @@ export default function Page() {
 
   return (
     <section className="flex h-screen w-full flex-col p-4 md:p-8">
+      <div className="grid grid-cols-1 gap-4 py-4 md:grid-cols-3">
+        <Card>
+          <CardHeader>
+            <CardTitle>Received</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {history
+              .filter((invoice) => invoice.paymentStatus === "paid")
+              .reduce((acc, invoice) => acc + invoice.data.total, 0)}
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Pending</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {history
+              .filter((invoice) => invoice.paymentStatus === "pending")
+              .reduce((acc, invoice) => acc + invoice.data.total, 0)}
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Total</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {history
+              .filter((invoice) => invoice.paymentStatus !== "draft")
+              .reduce((acc, invoice) => acc + invoice.data.total, 0)}
+          </CardContent>
+        </Card>
+      </div>
       <h1 className="font-semibold text-2xl">Invoice History</h1>
       <Table className="mt-4">
         <TableHeader>
@@ -135,95 +154,79 @@ export default function Page() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {history.length === 0 ? (
-            <TableRow className="h-24 text-muted-foreground">
-              <TableCell className="font-medium uppercase" colSpan={7}>
-                No invoices found.
-                <br />
-                <Link
-                  href="/"
-                  prefetch
-                  className={buttonVariants({variant: "link"})}
+          {history.map((invoice) => (
+            <TableRow key={invoice.id}>
+              <TableCell className="font-medium uppercase">
+                {invoice.data.clientDetails.name}
+              </TableCell>
+              <TableCell>
+                <div className="flex items-center gap-2">
+                  <Hash size={16} />
+                  {invoice.data.invoiceDetails.invoiceNumber}
+                </div>
+              </TableCell>
+              <TableCell>
+                <div className="flex items-center">
+                  <CalendarCheck className="mr-2" size={16} />
+                  {invoice.data.invoiceDetails.date.toLocaleDateString()}
+                </div>
+              </TableCell>
+              <TableCell>
+                <div className="flex items-center">
+                  <CalendarClock className="mr-2" size={16} />
+                  {invoice.data.invoiceDetails.dueDate?.toLocaleDateString() ||
+                    "N/A"}
+                </div>
+              </TableCell>
+              <TableCell>
+                <div className="flex items-center">
+                  <DollarSign className="mr-2" size={16} />
+                  {invoice.data.total}
+                </div>
+              </TableCell>
+              <TableCell>
+                <Select
+                  value={invoice.paymentStatus}
+                  onValueChange={(value) =>
+                    updateInvoiceStatus(
+                      invoice.id,
+                      value as "draft" | "pending" | "paid" | "failed",
+                    )
+                  }
                 >
-                  Create an invoice
+                  <SelectTrigger className="w-[180px]">
+                    <SelectValue placeholder="Status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="draft">Draft</SelectItem>
+                    <SelectItem value="pending">Pending</SelectItem>
+                    <SelectItem value="paid">Paid</SelectItem>
+                    <SelectItem value="failed">Failed</SelectItem>
+                  </SelectContent>
+                </Select>
+              </TableCell>
+              <TableCell className="flex items-center justify-end gap-2">
+                <Link
+                  href={`/invoice?invoice=${invoice.data.invoiceDetails.invoiceNumber}`}
+                  className={buttonVariants({
+                    variant: "secondary",
+                    size: "sm",
+                  })}
+                >
+                  <Edit className="mr-2" size={16} />
+                  Edit
                 </Link>
+                <Button
+                  variant={"destructive"}
+                  size={"sm"}
+                  onClick={() => deleteInvoice(invoice.id)}
+                >
+                  <Trash2 className="mr-2" size={16} />
+                  Delete
+                </Button>
               </TableCell>
             </TableRow>
-          ) : (
-            history.map((invoice) => (
-              <TableRow key={invoice.id}>
-                <TableCell className="font-medium uppercase">
-                  {invoice.data.clientDetails.name}
-                </TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-2">
-                    <Hash size={16} />
-                    {invoice.data.invoiceDetails.invoiceNumber}
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <div className="flex items-center">
-                    <CalendarCheck className="mr-2" size={16} />
-                    {invoice.data.invoiceDetails.date.toLocaleDateString()}
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <div className="flex items-center">
-                    <CalendarClock className="mr-2" size={16} />
-                    {invoice.data.invoiceDetails.dueDate?.toLocaleDateString() ||
-                      "N/A"}
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <div className="flex items-center">
-                    <DollarSign className="mr-2" size={16} />
-                    {invoice.data.total}
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <Select
-                    value={invoice.paymentStatus}
-                    onValueChange={(value) =>
-                      updateInvoiceStatus(
-                        invoice.id,
-                        value as "draft" | "pending" | "paid" | "failed",
-                      )
-                    }
-                  >
-                    <SelectTrigger className="w-[180px]">
-                      <SelectValue placeholder="Status" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="draft">Draft</SelectItem>
-                      <SelectItem value="pending">Pending</SelectItem>
-                      <SelectItem value="paid">Paid</SelectItem>
-                      <SelectItem value="failed">Failed</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </TableCell>
-                <TableCell className="flex items-center justify-end gap-2">
-                  <Link
-                    href={`/invoice?invoice=${invoice.data.invoiceDetails.invoiceNumber}`}
-                    className={buttonVariants({
-                      variant: "secondary",
-                      size: "sm",
-                    })}
-                  >
-                    <Edit className="mr-2" size={16} />
-                    Edit
-                  </Link>
-                  <Button
-                    variant={"destructive"}
-                    size={"sm"}
-                    onClick={() => deleteInvoice(invoice.id)}
-                  >
-                    <Trash2 className="mr-2" size={16} />
-                    Delete
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))
-          )}
+          ))}
         </TableBody>
       </Table>
     </section>

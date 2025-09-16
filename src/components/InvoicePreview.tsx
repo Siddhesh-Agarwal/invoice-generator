@@ -6,7 +6,7 @@ interface InvoicePreviewProps {
   invoice: InvoiceType;
 }
 
-function InvoicePreview({invoice}: InvoicePreviewProps) {
+export default function InvoicePreview({invoice}: InvoicePreviewProps) {
   return (
     <div className="animate-fade-in p-6 print:p-0">
       <div className="mb-8 grid grid-cols-2 gap-8">
@@ -101,7 +101,10 @@ function InvoicePreview({invoice}: InvoicePreviewProps) {
               </tr>
             ) : (
               invoice.lineItems.map((item, index) => (
-                <tr key={index} className="border-border border-b">
+                <tr
+                  key={`${invoice.invoiceDetails.invoiceNumber}-${index}`}
+                  className="border-border border-b"
+                >
                   <td className="py-3">
                     {item.description || "Item description"}
                   </td>
@@ -138,7 +141,7 @@ function InvoicePreview({invoice}: InvoicePreviewProps) {
 
       {invoice.notes && (
         <div className="border-border border-t pt-4">
-          <div className="mb-1 font-semibold text-gray-600 text-sm">Notes</div>
+          <div className="mb-1 font-semibold text-sm">Notes</div>
           <div className="whitespace-pre-line text-muted-foreground text-sm">
             {invoice.notes}
           </div>
@@ -147,5 +150,3 @@ function InvoicePreview({invoice}: InvoicePreviewProps) {
     </div>
   );
 }
-
-export default InvoicePreview;
