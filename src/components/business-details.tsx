@@ -5,14 +5,13 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {Input} from "@/components/ui/input";
-import {Textarea} from "@/components/ui/textarea";
-import {type BusinessDetailsType, businessSchema} from "@/types/invoice";
-
-import {zodResolver} from "@hookform/resolvers/zod";
-import {useEffect} from "react";
-import {useForm} from "react-hook-form";
-import LogoUpload from "./LogoUpload";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { type BusinessDetailsType, businessSchema } from "@/types/invoice";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import LogoUpload from "./logo-upload";
 
 interface BusinessDetailsProps {
   businessDetails: BusinessDetailsType;
@@ -40,13 +39,13 @@ const BusinessDetails = ({
         <FormField
           control={form.control}
           name="logoUrl"
-          render={({field}) => (
+          render={({ field }) => (
             <FormItem>
               <FormLabel>Upload Logo</FormLabel>
               <LogoUpload
                 logoUrl={field.value}
                 onLogoChange={(url) =>
-                  form.setValue("logoUrl", url, {shouldValidate: true})
+                  form.setValue("logoUrl", url, { shouldValidate: true })
                 }
               />
               <FormMessage />
@@ -57,7 +56,7 @@ const BusinessDetails = ({
         <FormField
           control={form.control}
           name="name"
-          render={({field}) => (
+          render={({ field }) => (
             <FormItem>
               <FormLabel>Business Name</FormLabel>
               <Input {...field} placeholder="Your Business Name" />
@@ -69,7 +68,7 @@ const BusinessDetails = ({
         <FormField
           control={form.control}
           name="email"
-          render={({field}) => (
+          render={({ field }) => (
             <FormItem>
               <FormLabel>Email</FormLabel>
               <Input
@@ -85,7 +84,7 @@ const BusinessDetails = ({
         <FormField
           control={form.control}
           name="phone"
-          render={({field}) => (
+          render={({ field }) => (
             <FormItem>
               <FormLabel>Phone</FormLabel>
               <Input {...field} type="tel" placeholder="(123) 456-7890" />
@@ -97,7 +96,7 @@ const BusinessDetails = ({
         <FormField
           control={form.control}
           name="address"
-          render={({field}) => (
+          render={({ field }) => (
             <FormItem>
               <FormLabel>Address</FormLabel>
               <Textarea

@@ -1,18 +1,16 @@
 "use client";
 
-import {ImageIcon, X} from "lucide-react";
-import type React from "react";
-import {useRef} from "react";
-
-import {Button} from "@/components/ui/button";
-import {Input} from "./ui/input";
+import { ImageIcon, X } from "lucide-react";
+import { useRef } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 interface LogoUploadProps {
   logoUrl?: string;
   onLogoChange: (url?: string) => void;
 }
 
-function LogoUpload({logoUrl, onLogoChange}: LogoUploadProps) {
+function LogoUpload({ logoUrl, onLogoChange }: LogoUploadProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {

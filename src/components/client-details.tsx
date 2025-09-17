@@ -1,10 +1,10 @@
-import {Input} from "@/components/ui/input";
-import {Textarea} from "@/components/ui/textarea";
-import {type ClientDetailsType, clientSchema} from "@/types/invoice";
-import {zodResolver} from "@hookform/resolvers/zod";
-import {useEffect} from "react";
-import {useForm} from "react-hook-form";
-import {Form, FormField, FormItem, FormLabel, FormMessage} from "./ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { type ClientDetailsType, clientSchema } from "@/types/invoice";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { Form, FormField, FormItem, FormLabel, FormMessage } from "./ui/form";
 
 interface ClientDetailsProps {
   clientDetails: ClientDetailsType;
@@ -32,7 +32,7 @@ const ClientDetails = ({
         <FormField
           control={form.control}
           name="name"
-          render={({field}) => (
+          render={({ field }) => (
             <FormItem>
               <FormLabel>Client Name</FormLabel>
               <Input {...field} placeholder="Client or Company Name" />
@@ -44,7 +44,7 @@ const ClientDetails = ({
         <FormField
           control={form.control}
           name="email"
-          render={({field}) => (
+          render={({ field }) => (
             <FormItem>
               <FormLabel>Email</FormLabel>
               <Input
@@ -60,7 +60,7 @@ const ClientDetails = ({
         <FormField
           control={form.control}
           name="phone"
-          render={({field}) => (
+          render={({ field }) => (
             <FormItem>
               <FormLabel>Phone</FormLabel>
               <Input {...field} type="tel" placeholder="(123) 456-7890" />
@@ -72,7 +72,7 @@ const ClientDetails = ({
         <FormField
           control={form.control}
           name="address"
-          render={({field}) => (
+          render={({ field }) => (
             <FormItem>
               <FormLabel>Address</FormLabel>
               <Textarea

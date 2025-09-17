@@ -1,30 +1,10 @@
-import {db} from "@/server/db";
-import {
-  Accounts,
-  Sessions,
-  Users,
-  VerificationTokens,
-} from "@/server/db/schema";
-import {DrizzleAdapter} from "@auth/drizzle-adapter";
 import NextAuth from "next-auth";
-import Google from "next-auth/providers/google";
+import { cache } from "react";
 
-export const {auth, handlers, signIn, signOut} = NextAuth({
-  adapter: DrizzleAdapter(db, {
-    usersTable: Users,
-    accountsTable: Accounts,
-    sessionsTable: Sessions,
-    verificationTokensTable: VerificationTokens,
-  }),
-  providers: [
-    Google({
-      authorization: {
-        params: {
-          prompt: "consent",
-          access_type: "offline",
-          response_type: "code",
-        },
-      },
-    }),
-  ],
-});
+import { authConfig } from "./config";
+
+const { auth: uncachedAuth, handlers, signIn, signOut } = NextAuth(authConfig);
+
+const auth = cache(uncachedAuth);
+
+export { auth, handlers, signIn, signOut };

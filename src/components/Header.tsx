@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import {AuthButton} from "./AuthButton";
-import {Button} from "./ui/button";
+import { Button } from "./ui/button";
+import { AuthButton } from "./auth-button";
 
 export default function Header() {
   return (

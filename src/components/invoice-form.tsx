@@ -5,13 +5,9 @@ import type {
   InvoiceType,
   LineItemType,
 } from "@/types/invoice";
-import {Plus} from "lucide-react";
-import BusinessDetails from "./BusinessDetails";
-import ClientDetails from "./ClientDetails";
-import InvoiceDetails from "./InvoiceDetails";
-import LineItem from "./LineItem";
-import {Button} from "./ui/button";
-import {Card, CardContent, CardHeader, CardTitle} from "./ui/card";
+import { Plus } from "lucide-react";
+import { Button } from "./ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import {
   Table,
   TableBody,
@@ -20,7 +16,11 @@ import {
   TableHeader,
   TableRow,
 } from "./ui/table";
-import {Textarea} from "./ui/textarea";
+import { Textarea } from "./ui/textarea";
+import InvoiceDetails from "./invoice-details";
+import BusinessDetails from "./business-details";
+import ClientDetails from "./client-details";
+import LineItem from "./line-item";
 
 interface InvoiceFormProps {
   invoice: InvoiceType;

@@ -1,4 +1,4 @@
-import {signIn, signOut} from "@/server/auth";
+import { signIn, signOut } from "@/server/auth";
 
 export async function serverSignOut() {
   "use server";

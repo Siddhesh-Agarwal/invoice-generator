@@ -1,7 +1,7 @@
-import {serverSignIn, serverSignOut} from "@/lib/helpers";
-import {auth} from "@/server/auth";
-import {LogIn, LogOut} from "lucide-react";
-import {Button} from "./ui/button";
+import { serverSignIn, serverSignOut } from "@/lib/helpers";
+import { auth } from "@/server/auth";
+import { LogIn, LogOut } from "lucide-react";
+import { Button } from "./ui/button";
 
 export async function AuthButton() {
   const session = await auth();

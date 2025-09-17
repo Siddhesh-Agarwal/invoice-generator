@@ -1,16 +1,18 @@
 import "@/styles/globals.css";
-import Header from "@/components/Header";
-import {Toaster} from "@/components/ui/sonner";
-import {TRPCReactProvider} from "@/trpc/react";
-import type {Metadata} from "next";
-import {Inter} from "next/font/google";
-import {Suspense} from "react";
+
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+
+import { TRPCReactProvider } from "@/trpc/react";
+import Header from "@/components/header";
+import { Toaster } from "sonner";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "Simple Invoice Generator",
   description: "A simple no-nonsense invoice generator",
   keywords: ["invoice", "generator", "simple"],
-  icons: [{rel: "icon", url: "/favicon.ico"}],
+  icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
 const geist = Inter({
@@ -20,9 +22,9 @@ const geist = Inter({
 
 export default function RootLayout({
   children,
-}: Readonly<{children: React.ReactNode}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${geist.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`${geist.variable}`}>
       <body>
         <TRPCReactProvider>
           <main className="min-h-screen bg-background">

@@ -1,10 +1,10 @@
-import {type InvoiceDetailsType, invoiceDetailsSchema} from "@/types/invoice";
-import {zodResolver} from "@hookform/resolvers/zod";
-import {useEffect} from "react";
-import {useForm} from "react-hook-form";
-import {DateInput} from "./ui/date-input";
-import {Form, FormField, FormItem, FormLabel, FormMessage} from "./ui/form";
-import {Input} from "./ui/input";
+import { type InvoiceDetailsType, invoiceDetailsSchema } from "@/types/invoice";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { DateInput } from "./ui/date-input";
+import { Form, FormField, FormItem, FormLabel, FormMessage } from "./ui/form";
+import { Input } from "./ui/input";
 
 export default function InvoiceDetails({
   invoiceDetails,
@@ -30,7 +30,7 @@ export default function InvoiceDetails({
         <FormField
           control={form.control}
           name="invoiceNumber"
-          render={({field}) => (
+          render={({ field }) => (
             <FormItem>
               <FormLabel>Invoice #</FormLabel>
               <Input {...field} />
@@ -42,7 +42,7 @@ export default function InvoiceDetails({
         <FormField
           control={form.control}
           name="dueDate"
-          render={({field}) => (
+          render={({ field }) => (
             <FormItem>
               <FormLabel>Due Date</FormLabel>
               <DateInput {...field} />
@@ -54,7 +54,7 @@ export default function InvoiceDetails({
         <FormField
           control={form.control}
           name="date"
-          render={({field}) => (
+          render={({ field }) => (
             <FormItem>
               <FormLabel>Invoice Date</FormLabel>
               <DateInput {...field} />

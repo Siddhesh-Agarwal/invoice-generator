@@ -1,12 +1,11 @@
-import {format} from "date-fns";
-
-import type {InvoiceType} from "@/types/invoice";
+import { format } from "date-fns";
+import type { InvoiceType } from "@/types/invoice";
 
 interface InvoicePreviewProps {
   invoice: InvoiceType;
 }
 
-export default function InvoicePreview({invoice}: InvoicePreviewProps) {
+export default function InvoicePreview({ invoice }: InvoicePreviewProps) {
   return (
     <div className="animate-fade-in p-6 print:p-0">
       <div className="mb-8 grid grid-cols-2 gap-8">
