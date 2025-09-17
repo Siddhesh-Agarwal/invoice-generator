@@ -9,9 +9,7 @@ export default function Header() {
       <Link href={"/"} prefetch passHref>
         <div className="flex">
           <Image alt="logo" src="/favicon-32x32.png" height={30} width={30} />
-          <span className="font-semibold text-lg">
-            Simple Invoice Generator
-          </span>
+          <span className="font-semibold text-lg">InvoicePal</span>
         </div>
       </Link>
       <div className="flex">

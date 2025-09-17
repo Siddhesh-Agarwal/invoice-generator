@@ -1,4 +1,4 @@
-# Simple Invoice Generator
+# InvoicePal
 
 This is a no-nonsense invoice generator.
 

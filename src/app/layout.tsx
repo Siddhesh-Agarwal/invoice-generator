@@ -9,9 +9,9 @@ import { Toaster } from "sonner";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
-  title: "Simple Invoice Generator",
+  title: "InvoicePal",
   description: "A simple no-nonsense invoice generator",
-  keywords: ["invoice", "generator", "simple"],
+  keywords: ["invoice", "generator", "simple", "InvoicePal"],
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
