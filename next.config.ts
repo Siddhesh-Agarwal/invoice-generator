@@ -3,8 +3,10 @@
  * for Docker builds.
  */
 import "./src/env.js";
+import type { NextConfig } from "next";
 
-/** @type {import("next").NextConfig} */
-const config = {};
+const config: NextConfig = {
+  devIndicators: false,
+};
 
 export default config;
