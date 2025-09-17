@@ -108,7 +108,7 @@ export default function Page() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+      <div className="mx-auto px-4 py-6 sm:px-6 lg:px-8">
         <div className="mb-8 flex items-center justify-between print:hidden">
           <h1 className="font-bold text-3xl text-invoice-primary">
             Invoice Generator
@@ -129,7 +129,7 @@ export default function Page() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
           <div className="lg:col-span-1 print:hidden">
             <InvoiceForm
               invoice={invoice}

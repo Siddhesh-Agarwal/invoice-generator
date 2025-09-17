@@ -51,7 +51,7 @@ export function DateInput({
             id={name}
             variant="outline"
             className={cn(
-              "flex-1 justify-start text-left font-normal",
+              "w-full flex-1 justify-start text-left font-normal",
               !selectedDate && "text-muted-foreground",
             )}
             disabled={disabled}
